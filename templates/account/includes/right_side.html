@@ -1,0 +1,50 @@
+{% load static %}
+
+<div class="right__side__wrapper">
+    <div class="card border-0">
+        <div class="card-body ">
+            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+                <p class="trade-header fw-bold mt-3">Active Trades</p>
+                <a href="" class="small">More <i class="fa-solid fa-chevron-right ms-2"></i></a>
+            </div>
+            
+            <hr class="mb-0">
+            <div class="single__trade">
+                <img src="{% static 'account/images/tesla.png' %}" style="width: 30px;">
+                <p class="brand">Tesla</p>
+                <p class="trade__bond">1402 <br>bonds</p>
+                <p class="trade__price fw-bold">$289,34 <br><span class="fw-300 text-success">+1.05%</span></p>
+            </div>
+            <hr class="mt-0">
+            <div class="single__trade">
+                <img src="{% static 'account/images/mcdonalds.png' %}" style="width: 30px;">
+                <p class="brand">Mcdonalds</p>
+                <p class="trade__bond">1102 <br>bonds</p>
+                <p class="trade__price fw-bold">$196,34 <br><span class="fw-300 text-danger">+0.45%</span></p>
+            </div>
+            <hr class="mt-0">
+            <div class="single__trade">
+                <img src="{% static 'account/images/monster.png' %}" style="width: 30px;">
+                <p class="brand">Monster</p>
+                <p class="trade__bond">1802 <br>bonds</p>
+                <p class="trade__price fw-bold">$89,34 <br><span class="fw-300 text-danger">-1.85%</span></p>
+            </div>
+            <hr class="mt-0">
+            <div class="single__trade">
+                <img src="{% static 'account/images/uniliver.png' %}" style="width: 30px;">
+                <p class="brand">Uniliver</p>
+                <p class="trade__bond">2402 <br>bonds</p>
+                <p class="trade__price fw-bold">$129,34 <br><span class="fw-300 text-success">+2.15%</span></p>
+            </div>
+            <hr class="mt-0">
+        </div>
+    </div>
+</div>
+
+<div class="right__side__wrapper2 mt-5">
+    <div class="card border-0">
+        <div class="card-body">
+            {% include '../tradingviewchart/widgetmini.html' %}
+        </div>
+    </div>
+</div>

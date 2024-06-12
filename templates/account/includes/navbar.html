@@ -1,0 +1,28 @@
+{% load static %}
+
+<nav class="my__navbar shadow">
+    <div class="container-fluid">
+        <div class="navbar__wrapper">
+            <img src="{% static 'account/images/logo.png' %}" alt="" class="logo">
+            <div class="search__bar">
+                <input type="search">
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <div class="profile__area">
+                <div class="profile">
+                    
+                    <div class="profile-photo">
+                        <img src="{% static 'account/images/profile-1.png' %}" alt="profile1" style="width: 40px; height: 40px; border-radius: 50%;">
+                    </div>
+                    <h5 class="text-muted">William</h5>
+                    
+                    <!-- <span class="material-icons-sharp">expand_more</span> -->
+                </div>
+                <div class="menu__btn__wrapper">
+                    <i class="fa-solid fa-bars" id="menu-bar"></i>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</nav>
