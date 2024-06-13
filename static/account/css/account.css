@@ -229,7 +229,7 @@ main #middle-section .dashboard__header h4{
 
 main #middle-section .credit_cards{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 24px;
 }
 
@@ -328,3 +328,46 @@ main #middle-section .my__card .bottom h5{
     font-size: 10px;
     font-weight: 600;
 }
+
+
+/* monthly report */
+main .monthly-report{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    justify-content: space-between;
+    /* margin-top: 1rem; */
+}
+
+main .monthly-report .report div{
+    cursor: pointer;
+}
+
+main .monthly-report h1{
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+main .monthly-report h3{
+    font-weight: 700;
+    font-size: 16px;
+}
+
+main .monthly-report h4{
+    font-weight: 600;
+    font-size: 16px;
+}
+
+main .monthly-report p{
+    font-weight: 600;
+    font-size: 11px;
+}
+
+details{
+    font-weight: 600;
+    font-size: 12px;
+}
+/* details{
+    color: var(--color-gray-light);
+} */
+

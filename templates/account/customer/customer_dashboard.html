@@ -114,6 +114,102 @@
     <div class="marquee__wrapper mt-3">
         {% include '../tradingviewchart/tickertape.html' %}
     </div>
+
+    <!-- monthly report -->
+    <div class="monthly-report">
+        <div class="report">
+            <h3>Balance</h3>
+            <div>
+                <details>
+                    <h1>$19,230</h1>
+                    <h4 class="text-success">+4.6%</h4>
+                </details>
+                <p class="text-muted">Compared to $18,384 last month</p>
+            </div>
+        </div>
+        <div class="report">
+            <h3>Profit</h3>
+            <div>
+                <details>
+                    <h1>$9,113</h1>
+                    <h4 class="text-danger">-6.2%</h4>
+                </details>
+                <p class="text-muted">Compared to $9,715 last month</p>
+            </div>
+        </div>
+        <div class="report">
+            <h3>Cashback</h3>
+            <div>
+                <details>
+                    <h1>$4,390</h1>
+                    <h4 class="text-success">+2.9%</h4>
+                </details>
+                <p class="text-muted">Compared to $4,266 last month</p>
+            </div>
+        </div>
+        <div class="report">
+            <h3>Running</h3>
+            <div>
+                <details>
+                    <h1>$86,374</h1>
+                    <h4 class="text-danger">-5.2%</h4>
+                </details>
+                <p class="text-muted">Compared to $91,111 last month</p>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-3" style="width: 100%; border-radius: 10px;">
+        <canvas id="stock-chart" style="width: 100%; height: 400px;"></canvas>
+    </div>
+    <!-- <div class="card">
+        <canvas id="stock-chart" width="800" height="400"></canvas>
+    </div> -->
     
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Fetch data from the view
+    fetch("{% url 'account:aapl_data_view' %}")
+        .then(response => response.json())
+        .then(data => {
+            var ctx = document.getElementById('stock-chart').getContext('2d');
+            var stockChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'AAPL Stock Price',
+                        data: data.prices,
+                        borderColor: 'blue',
+                        fill: false
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'AAPL Stock Price'
+                    },
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date'
+                            }
+                        }],
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Price'
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+</script>
 {% endblock %}
