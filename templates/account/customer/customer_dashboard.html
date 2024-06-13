@@ -169,47 +169,27 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // Fetch data from the view
-    fetch("{% url 'account:aapl_data_view' %}")
-        .then(response => response.json())
-        .then(data => {
-            var ctx = document.getElementById('stock-chart').getContext('2d');
-            var stockChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.labels,
-                    datasets: [{
-                        label: 'AAPL Stock Price',
-                        data: data.prices,
-                        borderColor: 'blue',
-                        fill: false
-                    }]
-                },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'AAPL Stock Price'
+    fetch("{% url 'account:combined_data_view' %}")  
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('stock-chart').getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: data.datasets
                     },
-                    scales: {
-                        xAxes: [{
-                            type: 'time',
-                            time: {
-                                unit: 'day'
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Date'
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
                             }
-                        }],
-                        yAxes: [{
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Price'
-                            }
-                        }]
+                        }
                     }
-                }
-            });
-        });
+                });
+            })
+            .catch(error => console.error('Error fetching chart data:', error));        
 </script>
 {% endblock %}
