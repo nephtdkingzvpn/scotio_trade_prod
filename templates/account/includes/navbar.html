@@ -14,7 +14,7 @@
                     <div class="profile-photo">
                         <img src="{% static 'account/images/profile-1.png' %}" alt="profile1" style="width: 40px; height: 40px; border-radius: 50%;">
                     </div>
-                    <h5 class="text-muted">William</h5>
+                    <h5 class="text-muted">{{request.user.profile.full_name}}</h5>
                     
                     <!-- <span class="material-icons-sharp">expand_more</span> -->
                 </div>

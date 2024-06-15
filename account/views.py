@@ -75,3 +75,10 @@ def combined_data_view(request):
         print("Error processing data:", e)
         return JsonResponse({'error': 'Failed to process data'})
 
+
+def exchange_view(request):
+    return render(request, 'account/customer/exchange.html')
+
+
+def crypto_wallet_view(request):
+    return render(request, 'account/customer/crypto_wallet.html')

@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.hashers import make_password
 from django.utils.translation import gettext as _
-from .models import CustomUser
+from .models import CustomUser, Profile
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -47,3 +47,4 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ()
 
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Profile)

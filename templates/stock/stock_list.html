@@ -1,0 +1,96 @@
+{% extends '../account/base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+<style>
+    .header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .header h3{
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+<div class="container-fluid py-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="header">
+                        <h3 class="text-center text-muted">
+                            Active Stock Trades
+                        </h3>
+                        <a href="{% url 'stock:buy_new_stock' %}" class="buy_stock btn w-50">Buy New Stock</a>
+                    </div>
+                    {% include '../account/includes/alert.html' %}
+                    <hr>
+                    
+                    <div class="table-responsive table-condensed">
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Logo</th>
+                                <th scope="col">Company</th>
+                                <th scope="col">Bonds</th>
+                                <th scope="col">Bought</th>
+                                <th scope="col">Expecting</th>
+                                <th scope="col">Live</th>
+                                <th scope="col"></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% for stock in active_stocks %}
+                              <tr>
+                                <td>Logo here</td>
+                                <td>{{stock.stock.company}}</td>
+                                <td class="text-muted">{{stock.get_number_of_bonds}} Bonds</td>
+                                <td>${{stock.amount|intcomma}}</td>
+                                <td>${{stock.get_live_profit|intcomma}}</td>
+                                <td class="fw-bold text-{% if stock.is_profit %}success{% else%}danger{% endif %}">{{stock.percent_live}}%</td>
+                                <!-- <td><a href="" class="table-btn w-100">Sell</a></td> -->
+                                <td>
+                                    <form action="{% url 'stock:sell_stock' %}" method="POST" id="sell_stock_form">
+                                        <input type="text" name="stock_id" value="{{stock.id}}" hidden>
+                                        {% csrf_token %}
+                                        <button type="submit" class="table-btn w-100" id="sell_stock_btn">
+                                            <span class="sell-btn-text">Sell</span>
+                                            <i class="fa-solid fa-spinner fa-spin d-none" id="sell_stock_spinner"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const form = document.querySelector('#sell_stock_form');
+    const sellBtn = document.querySelector('#sell_stock_btn');
+    const spinner = document.querySelector('#sell_stock_spinner');
+    const btnText = document.querySelector('.sell-btn-text');
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+
+        spinner.classList.remove('d-none');
+        btnText.textContent = '';
+        sellBtn.disabled = true;
+
+        form.submit();
+    })
+</script>
+{% endblock %}
+<!-- <br> -->

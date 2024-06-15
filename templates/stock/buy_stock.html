@@ -1,0 +1,53 @@
+{% extends '../account/base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="dashboard__header">
+        <h4>Dollar Balance: ${{request.user.profile.dollar_balance|intcomma}}</h4>
+        <hr class="mt-0 mt-md-2">
+    </div>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="text-center">Purchase Stock</h4>
+                    {% include '../account/includes/alert.html' %}
+                    <hr>
+
+                    <form action="." method="POST" id="buy_stock_form">
+                        {% csrf_token %}
+                        {{form.as_p}}
+
+                        <button type="submit" class="btn w-100 mt-2" id="buy_stock_btn">
+                            <span class="buy-btn-text">Buy</span>
+                            <i class="fa-solid fa-spinner fa-spin text-white d-none" id="buy_stock_spinner"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.querySelector('#buy_stock_form');
+    const sellBtn = document.querySelector('#buy_stock_btn');
+    const spinner = document.querySelector('#buy_stock_spinner');
+    const btnText = document.querySelector('.buy-btn-text');
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+
+        spinner.classList.remove('d-none');
+        btnText.textContent = '';
+        sellBtn.style.backgroundColor = 'rgba(71, 7, 234, 0.2)';
+        sellBtn.disabled = true;
+
+        form.submit();
+    })
+</script>
+{% endblock %}

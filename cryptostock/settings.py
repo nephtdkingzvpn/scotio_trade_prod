@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     # my apps
     'account',
     'frontend',
+    'crypto',
+    'stock',
 ]
 
 MIDDLEWARE = [

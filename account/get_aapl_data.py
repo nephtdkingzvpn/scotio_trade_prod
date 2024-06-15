@@ -25,7 +25,7 @@ def fetch_data(symbol):
         'corsDomain': 'finance.yahoo.com'
     }
     response = requests.get(url, params=params, headers=HEADERS)
-    response.raise_for_status()  # Raise exception for HTTP errors
+    response.raise_for_status()
     return response.json()
 
 
