@@ -1,6 +1,7 @@
 import requests
 from cachetools import cached, TTLCache
 from tenacity import retry, wait_exponential, stop_after_attempt
+from decimal import Decimal, ROUND_DOWN
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -36,3 +37,68 @@ def get_data(symbol):
     else:
         print(f"Fetching {symbol} data from API")
     return fetch_data(symbol)
+
+
+# @cached(cache)
+def get_live_crypto_rates():
+    url = 'https://api.coingecko.com/api/v3/simple/price'
+    params = {
+        'ids': 'bitcoin,ethereum,tether',
+        'vs_currencies': 'usd'
+    }
+    response = requests.get(url, params=params)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return {
+            'bitcoin': data['bitcoin']['usd'],
+            'ethereum': data['ethereum']['usd'],
+            'tether': data['tether']['usd']
+        }
+    else:
+        return None
+
+
+def convert_usd_to_crypto(amount_in_usd, rates, crypto_type='bitcoin'):
+    def format_amount(amount):
+        if amount < 1:
+            return amount.quantize(Decimal('1.000000000'), rounding=ROUND_DOWN)
+        else:
+            return round(amount, 2)
+
+    conversions = {}
+    
+    if crypto_type == 'bitcoin' and 'bitcoin' in rates:
+        btc_rate = Decimal(rates['bitcoin'])
+        conversions['bitcoin'] = format_amount(Decimal(amount_in_usd) / btc_rate)
+    
+    elif crypto_type == 'ethereum' and 'ethereum' in rates:
+        eth_rate = Decimal(rates['ethereum'])
+        conversions['ethereum'] = format_amount(Decimal(amount_in_usd) / eth_rate)
+    
+    elif crypto_type == 'usdt' and 'tether' in rates:
+        usdt_rate = Decimal(rates['tether'])
+        conversions['usdt'] = format_amount(Decimal(amount_in_usd) / usdt_rate)
+    
+    return conversions
+
+
+def convert_crypto_to_usd(amount_in_crypto, rates, crypto_type='bitcoin'):
+    def format_amount(amount):
+        return round(amount, 2)
+
+    conversions = {}
+    
+    if crypto_type == 'bitcoin' and 'bitcoin' in rates:
+        btc_rate = Decimal(rates['bitcoin'])
+        conversions['bitcoin'] = format_amount(Decimal(amount_in_crypto) * btc_rate)
+    
+    elif crypto_type == 'ethereum' and 'ethereum' in rates:
+        eth_rate = Decimal(rates['ethereum'])
+        conversions['ethereum'] = format_amount(Decimal(amount_in_crypto) * eth_rate)
+    
+    elif crypto_type == 'usdt' and 'tether' in rates:
+        usdt_rate = Decimal(rates['tether'])
+        conversions['usdt'] = format_amount(Decimal(amount_in_crypto) * usdt_rate)
+    
+    return conversions

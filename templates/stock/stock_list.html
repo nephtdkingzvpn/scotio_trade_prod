@@ -52,7 +52,7 @@
                                 <td class="text-muted">{{stock.get_number_of_bonds}} Bonds</td>
                                 <td>${{stock.amount|intcomma}}</td>
                                 <td>${{stock.get_live_profit|intcomma}}</td>
-                                <td class="fw-bold text-{% if stock.is_profit %}success{% else%}danger{% endif %}">{{stock.percent_live}}%</td>
+                                <td class="fw-bold text-{% if stock.is_profit and stock.percent_live >= 0.98 %}success{% else%}danger{% endif %}">{{stock.percent_live}}%</td>
                                 <!-- <td><a href="" class="table-btn w-100">Sell</a></td> -->
                                 <td>
                                     <form action="{% url 'stock:sell_stock' %}" method="POST" id="sell_stock_form">

@@ -1,0 +1,100 @@
+{% extends '../base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+<style>
+    .account_list p{
+        font-size: 12px;
+        margin-bottom: 5px !important; 
+    }
+    .acc_btn{
+        display: block;
+        margin-top: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgb(39, 36, 36);
+        color: #fff;
+        padding-block: 5px;
+        text-align: center;
+        border-radius: 10px;
+        cursor: pointer;
+        width: 100%;
+    }
+    .acc_btn:hover{
+        background-color: rgb(65, 62, 62);
+    }
+</style>
+<div class="container-fluid py-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-10">
+            <h5 class="text-center" style="font-size: 18px;">Select an existing account below to withdraw with or click on this link to add a new account <i class="fa-regular fa-hand-point-right ms-1"></i> <a href="{% url 'account:add_new_account' %}" class="small ms-3">Add New Account <i class="fa-solid fa-plus"></i></a></h5>
+            <hr>
+            {% include '../includes/alert.html' %}
+            <div class="row mt-md-5 mt-3">
+                {% for account in bank_accounts %}
+                <div class="col-md-4">
+                    <div class="card bg-light account_list mb-3">
+                        <div class="card-body">
+                            <p><strong>Bank: </strong>{{account.bank}}</p>
+                            <p><strong>Account Holder: </strong>{{account.holder_name}}</p>
+                            <p><strong>Account Number: </strong>{{account.account_number}}</p>
+                            <p class="mb-2"><strong>Swift/Iban: </strong>{{account.swift_iban}}</p>
+                            <a href="{% url 'account:withdraw_dollars' account.pk %}" class="acc_btn">Use This Account</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+    <!-- transaction list -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center text-muted">
+                        Transaction History
+                    </h5>
+                    <hr>
+                    
+                    <div class="table-responsive table-condensed">
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <!-- <th scope="col">Customer</th> -->
+                                <th scope="col">Bank</th>
+                                <th scope="col">Account Holder</th>
+                                <th scope="col">Account Number</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Date</th>
+                                <!-- <th scope="col">Transaction ID</th> -->
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% for transaction in transactions %}
+                              <tr>
+                                <!-- <td>{{transaction.user.profile.full_name}}</td> -->
+                                <td>{{transaction.bank}}</td>
+                                <td>{{transaction.holder_name}}</td>
+                                <td>{{transaction.account_number}}</td>
+                                <td>${{transaction.amount|intcomma}}</td>
+                                <td>{{transaction.date_created}}</td>
+                                <!-- <td>
+                                    {{transaction.ref}}
+                                </td> -->
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

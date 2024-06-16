@@ -1,8 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # my imports
 from .managers import CustomUserManager
+from .get_aapl_data import get_live_crypto_rates
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
@@ -30,12 +33,45 @@ class Profile(models.Model):
 
 class Balance(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    bitcoin = models.DecimalField(decimal_places=2, max_digits=12, default=0)
-    etheriun = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    bitcoin = models.FloatField()
+    etheriun = models.FloatField()
     usdt = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
     def __str__(self):
         return self.user.profile.full_name
+
+    
+    
+@receiver(post_save, sender=CustomUser)
+def user_post_save(sender, instance, created, **kwargs):
+    if created:
+        Balance.objects.create(user=instance)
+
+
+class BankAccount(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    bank = models.CharField(max_length=200)
+    holder_name = models.CharField(max_length=200)
+    account_number = models.CharField(max_length=100)
+    amount = models.DecimalField(decimal_places=2, max_digits=12, null=True, blank=True)
+    swift_iban = models.CharField(max_length=100, null=True, blank=True)
+    is_main = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.holder_name} - {self.bank}"
+    
+
+class BankTransaction(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    bank = models.CharField(max_length=200)
+    holder_name = models.CharField(max_length=200)
+    account_number = models.CharField(max_length=100)
+    amount = models.DecimalField(decimal_places=2, max_digits=12)
+    swift_iban = models.CharField(max_length=100, null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.holder_name} - {self.bank}"
 
     
 

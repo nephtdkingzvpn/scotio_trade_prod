@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.hashers import make_password
 from django.utils.translation import gettext as _
-from .models import CustomUser, Profile
+from .models import CustomUser, Profile, BankAccount, BankTransaction,Balance
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -48,3 +48,6 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Profile)
+admin.site.register(BankAccount)
+admin.site.register(BankTransaction)
+admin.site.register(Balance)

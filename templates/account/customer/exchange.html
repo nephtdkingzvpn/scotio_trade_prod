@@ -8,7 +8,7 @@
 
 <div class="container-fluid">
     <div class="dashboard__header">
-        <h4>Dollar Balance: $546,098</h4>
+        <h4>Dollar Balance: ${{request.user.profile.dollar_balance|intcomma}}</h4>
         <hr class="mt-0 mt-md-2">
     </div>
     <div class="row">
@@ -16,7 +16,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="text-center">
-                        Convert Dollar To Crypto
+                        Exchange Dollar To Crypto
                     </h4>
                     <hr>
                     <div class="row align-items-center justify-content-center">
@@ -47,7 +47,7 @@
             <div class="card mt-4">
                 <div class="card-body">
                     <h4 class="text-center">
-                        Buy Stock
+                        Exchange Crypto To Dollar
                     </h4>
                     <hr>
                     <div class="row align-items-center justify-content-center">
