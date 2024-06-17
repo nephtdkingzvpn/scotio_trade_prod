@@ -19,23 +19,27 @@
                         Exchange Dollar To Crypto
                     </h4>
                     <hr>
+                    {% include '../includes/alert.html' %}
                     <div class="row align-items-center justify-content-center">
                         <div class="col-md-7 p-5" style="border: 1px solid #6b60a8; border-radius: 10px;">
-                            <form action="">
+                            <form action="{% url 'account:exchange_view' %}" method="POST" id="d_to_c_form">
                                 {% csrf_token %}
                                 <div class="mb-3">
                                     <label for="currency" class="form-label fw-bold">Choose Crypto Currency</label>
-                                    <select class="form-select" id="currency">
-                                        <option selected value="Bitcoin">Bitcoin</option>
-                                        <option value="Etherium">Etherium</option>
-                                        <option value="USDT">USDT</option>
+                                    <select class="form-select" name="selected_option" id="currency">
+                                        <option selected value="bitcoin">Bitcoin</option>
+                                        <option value="ethereum">Etherium</option>
+                                        <option value="usdt">USDT</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="amount" class="form-label fw-bold">Amount In $</label>
-                                    <input type="number" class="form-control" id="amount" placeholder="2000">
+                                    <input type="number" name="amount" class="form-control" id="amount" placeholder="example 2000" required>
                                 </div>
-                                <button type="submit" class="btn w-100 mt-2">Buy</button>
+                                <button type="submit" class="btn w-100 mt-2" id="d_to_c_btn">
+                                    <span class="d_to_c_btn-text">Exchange</span>
+                                    <i class="fa-solid fa-spinner fa-spin text-white d-none" id="d_to_c_spinner"></i>
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -52,21 +56,24 @@
                     <hr>
                     <div class="row align-items-center justify-content-center">
                         <div class="col-md-7 p-5" style="border: 1px solid #6b60a8; border-radius: 10px;">
-                            <form action="">
+                            <form action="{% url 'account:exchange_crypto_tousd' %}" method="POST" id="c_to_d_form">
                                 {% csrf_token %}
                                 <div class="mb-3">
                                     <label for="currency" class="form-label fw-bold">Choose Crypto Currency</label>
-                                    <select class="form-select" id="currency">
-                                        <option selected value="Bitcoin">Bitcoin</option>
-                                        <option value="Etherium">Etherium</option>
-                                        <option value="USDT">USDT</option>
+                                    <select class="form-select" name="selected_option" id="currency">
+                                        <option selected value="bitcoin">Bitcoin</option>
+                                        <option value="ethereum">Etherium</option>
+                                        <option value="usdt">USDT</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="amount" class="form-label fw-bold">Amount In $</label>
-                                    <input type="number" class="form-control" id="amount" placeholder="2000">
+                                    <input type="number" class="form-control" id="amount" name="amount" placeholder="example 2000">
                                 </div>
-                                <button type="submit" class="btn w-100 mt-2">Buy</button>
+                                <button type="submit" class="btn w-100 mt-2" id="c_to_d_btn">
+                                    <span class="c_to_d_btn-text">Exchange</span>
+                                    <i class="fa-solid fa-spinner fa-spin text-white d-none" id="c_to_d_spinner"></i>
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -79,11 +86,47 @@
 <script>
     function validateNumber() {
         const input = document.getElementById('amount');
-        if (input.value < 10) {
+        if (input.value <= 0) {
             alert('Number must be positive');
             input.value = '';
         }
     }
+</script>
+
+<script>
+    const form = document.querySelector('#d_to_c_form');
+    const sellBtn = document.querySelector('#d_to_c_btn');
+    const spinner = document.querySelector('#d_to_c_spinner');
+    const btnText = document.querySelector('.d_to_c_btn-text');
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+
+        spinner.classList.remove('d-none');
+        btnText.textContent = '';
+        sellBtn.style.backgroundColor = 'rgb(46, 18, 114)';
+        sellBtn.disabled = true;
+
+        form.submit();
+    })
+</script>
+
+<script>
+    const cForm = document.querySelector('#c_to_d_form');
+    const cSellBtn = document.querySelector('#c_to_d_btn');
+    const cSpinner = document.querySelector('#c_to_d_spinner');
+    const cBtnText = document.querySelector('.c_to_d_btn-text');
+
+    cForm.addEventListener('submit', (e)=>{
+        e.preventDefault();
+
+        cSpinner.classList.remove('d-none');
+        cBtnText.textContent = '';
+        cSellBtn.style.backgroundColor = 'rgb(46, 18, 114)';
+        cSellBtn.disabled = true;
+
+        cForm.submit();
+    })
 </script>
 
 {% endblock %}

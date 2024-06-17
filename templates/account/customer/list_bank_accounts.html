@@ -6,6 +6,15 @@
 
 {% block content %}
 <style>
+    .account_list{
+        position: relative;
+    }
+
+    .account_list i{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
     .account_list p{
         font-size: 12px;
         margin-bottom: 5px !important; 
@@ -26,6 +35,9 @@
     .acc_btn:hover{
         background-color: rgb(65, 62, 62);
     }
+    .modal-content{
+        max-width: 400px;
+    }
 </style>
 <div class="container-fluid py-5">
     <div class="row justify-content-center align-items-center">
@@ -35,21 +47,41 @@
             {% include '../includes/alert.html' %}
             <div class="row mt-md-5 mt-3">
                 {% for account in bank_accounts %}
-                <div class="col-md-4">
-                    <div class="card bg-light account_list mb-3">
-                        <div class="card-body">
-                            <p><strong>Bank: </strong>{{account.bank}}</p>
-                            <p><strong>Account Holder: </strong>{{account.holder_name}}</p>
-                            <p><strong>Account Number: </strong>{{account.account_number}}</p>
-                            <p class="mb-2"><strong>Swift/Iban: </strong>{{account.swift_iban}}</p>
-                            <a href="{% url 'account:withdraw_dollars' account.pk %}" class="acc_btn">Use This Account</a>
+                    <div class="col-md-4">
+                        <div class="card bg-light account_list mb-3">
+                            <a data-bs-toggle="modal" data-bs-target="#delete-{{account.pk}}"><i class="fa-solid fa-xmark"></i></a>
+                            <div class="card-body">
+                                <p><strong>Bank: </strong>{{account.bank}}</p>
+                                <p><strong>Account Holder: </strong>{{account.holder_name}}</p>
+                                <p><strong>Account Number: </strong>{{account.account_number}}</p>
+                                <p class="mb-2"><strong>Swift/Iban: </strong>{{account.swift_iban}}</p>
+                                <a href="{% url 'account:withdraw_dollars' account.pk %}" class="acc_btn">Use This Account</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <!-- delete account modal -->
+                    <div class="modal fade" id="delete-{{account.pk}}" tabindex="-1" aria-labelledby="delete-{{account.pk}}ModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h1 class="modal-title fs-5 text-warning small" id="delete-{{account.pk}}ModalLabel"></h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                <p class="text-center text-danger">Are you sure you want to delete {{account.holder_name}}'s account information?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="{% url 'account:delete_account' account.pk %}"class="btn btn-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
         </div>
     </div>
+    <hr>
 
 
     <!-- transaction list -->
@@ -97,4 +129,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}

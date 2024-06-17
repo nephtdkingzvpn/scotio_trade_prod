@@ -5,9 +5,11 @@ from django.contrib import messages
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.http import JsonResponse
 import datetime
+import requests
 
 # my imports
-from .get_aapl_data import get_data, get_live_crypto_rates, convert_crypto_to_usd
+from .get_aapl_data import (get_data, get_live_crypto_rates, 
+                convert_crypto_to_usd, convert_usd_to_crypto)
 from .models import BankAccount, Profile, BankTransaction, Balance
 from . import forms
 
@@ -27,20 +29,23 @@ def login_user_view(request):
 
 
 def customer_dashboard(request):
-    rates = get_live_crypto_rates()
-    balance = Balance.objects.get(user=request.user)
+    try:
+        rates = get_live_crypto_rates()
+        balance = Balance.objects.get(user=request.user)
 
-    conversions = None
+        conversions = None
 
-    if rates:
-        # Convert to Bitcoin
-        bitcoin_rate = convert_crypto_to_usd(balance.bitcoin, rates, crypto_type='bitcoin')
+        if rates:
+            # Convert to Bitcoin
+            bitcoin_rate = convert_crypto_to_usd(balance.bitcoin, rates, crypto_type='bitcoin')
 
-        ethereum_rate = convert_crypto_to_usd(balance.etheriun, rates, crypto_type='ethereum')
+            ethereum_rate = convert_crypto_to_usd(balance.etheriun, rates, crypto_type='ethereum')
 
-    context = {'rates':rates, 'btc':bitcoin_rate, 'eth':ethereum_rate}
-
-    return render(request, 'account/customer/customer_dashboard.html', context)
+        context = {'rates':rates, 'btc':bitcoin_rate, 'eth':ethereum_rate}
+    except:
+        context = {'rates':'fetching', 'btc':'fetching', 'eth':'fetching'}
+    finally:
+        return render(request, 'account/customer/customer_dashboard.html', context)
 
 
 def combined_data_view(request):
@@ -94,8 +99,89 @@ def combined_data_view(request):
 
 
 def exchange_view(request):
+    if request.method == "POST":
+        user = Profile.objects.get(user=request.user)
+        balance = Balance.objects.get(user=request.user)
+        selected_option = request.POST.get('selected_option')
+        amount = request.POST.get('amount')
+        rates = get_live_crypto_rates()
+
+        # check if amount in input is less than the user"s balance
+        if Decimal(amount) > user.dollar_balance:
+            my_message = f'Insufficient balance, your dollar balance is ${intcomma(user.dollar_balance)}'
+            messages.error(request, my_message)
+            return redirect('account:exchange_view')
+        
+        if Decimal(amount) < Decimal(100):
+            messages.error(request, 'Exchange of below $100 is not allowed.')
+            return redirect('account:exchange_view')
+
+        if selected_option:
+            converted = convert_usd_to_crypto(amount, rates, crypto_type=selected_option)
+            c_crypto = converted[selected_option]
+            if converted:
+                if selected_option == 'bitcoin':
+                    balance.bitcoin = round(balance.bitcoin + float(c_crypto), 9)
+                elif selected_option == 'ethereum':
+                    balance.etheriun = round(balance.etheriun + float(c_crypto), 9)
+                elif selected_option == 'usdt':
+                    balance.usdt += c_crypto
+
+                balance.save()
+                user.dollar_balance -= Decimal(amount)
+                user.save()
+                my_message = f"A ${intcomma(amount)} worth of ({selected_option} coin) have been added to your {selected_option} wallet. Please click the crypto wallet link to view your transaction history"
+                messages.success(request, my_message)
+                return redirect('account:exchange_view')
+
     return render(request, 'account/customer/exchange.html', )
 
+
+def exchange_crypto_tousd_view(request):
+    if request.method == "POST":
+        user = Profile.objects.get(user=request.user)
+        balance = Balance.objects.get(user=request.user)
+        selected_option = request.POST.get('selected_option')
+        amount = request.POST.get('amount')
+        rates = get_live_crypto_rates()
+
+        if Decimal(amount) < Decimal(100):
+            messages.error(request, 'Exchange of below $100 is not allowed.')
+            return redirect('account:exchange_view')
+
+        if selected_option:
+            usd_to_crypto = convert_usd_to_crypto(amount, rates, crypto_type=selected_option)
+            c_crypto = usd_to_crypto[selected_option]
+
+            if usd_to_crypto:
+                m_message = f"Insufficient {selected_option} balance, please check your {selected_option} balance and try again."
+
+                if selected_option == 'bitcoin':
+                    if c_crypto > balance.bitcoin:
+                        messages.error(request, m_message)
+                        return redirect('account:exchange_view')
+                    balance.bitcoin = round(balance.bitcoin - float(c_crypto), 9)
+                elif selected_option == 'ethereum':
+                    if c_crypto > balance.etheriun:
+                        messages.error(request, m_message)
+                        return redirect('account:exchange_view')
+                    balance.etheriun = round(balance.etheriun - float(c_crypto), 9)
+                elif selected_option == 'usdt':
+                    if c_crypto > balance.usdt:
+                        messages.error(request, m_message)
+                        return redirect('account:exchange_view')
+                    balance.usdt -= c_crypto
+
+                balance.save()
+                user.dollar_balance += Decimal(amount)
+                user.save()
+
+                my_message = f"Your {selected_option} to dollar exchange was successful, ${intcomma(Decimal(amount))} have been added to your dollar balance."
+                messages.success(request, my_message)
+                return redirect('account:exchange_view')
+            
+            
+    return render(request, 'account/customer/exchange.html', )
 
 def crypto_wallet_view(request):
     rates = get_live_crypto_rates()
@@ -134,6 +220,13 @@ def add_new_account_view(request):
     context = {'form':form}
     return render(request, 'account/customer/add_new_account.html', context)
 
+
+def delete_account_view(request, pk):
+    bank_account = BankAccount.objects.get(pk=pk)
+    bank_account.delete()
+    messages.success(request, 'Bank account was deleted successfully')
+    return redirect('account:list_bank_account')
+
 def withdraw_dollars_view(request, pk):
     account_info = BankAccount.objects.get(pk=pk)
     user_profile = Profile.objects.get(user=request.user)
@@ -142,7 +235,7 @@ def withdraw_dollars_view(request, pk):
     if form .is_valid():
         amount = form.cleaned_data.get('amount')
         if not account_info.is_main:
-            messages.error(request, 'Sorry: A newly added account requires a verification process that could take up to 60 or more days before it can be allowed to be used for withdrawers. Thank you.')
+            messages.error(request, 'Sorry: For your security, This newly added account requires a verification process that could take up to 60 days before it will be available for withdrawer. Contact our help center for more information.')
             return redirect('account:withdraw_dollars', pk)
         if amount > user_profile.dollar_balance:
             balance = intcomma(user_profile.dollar_balance)
@@ -168,3 +261,14 @@ def withdraw_dollars_view(request, pk):
 
     context = {'form':form}
     return render(request, 'account/customer/withdraw_dollar.html', context)
+
+
+def crypto_price_history(request):
+    # Replace 'bitcoin' with the cryptocurrency of your choice
+    url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30'
+    response = requests.get(url)
+    data = response.json()
+    prices = data['prices']
+    timestamps = [price[0] for price in prices]
+    prices = [price[1] for price in prices]
+    return JsonResponse({'timestamps': timestamps, 'prices': prices})

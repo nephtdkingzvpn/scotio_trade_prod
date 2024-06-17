@@ -18,13 +18,13 @@
                     <h5 class="text-center">Add New Account</h5>
                     {% include '../includes/alert.html' %}
                     <hr>
-                    <form action="." method="POST">
+                    <form action="." method="POST" id="add_account_form">
                         {% csrf_token %}
                         {{form.as_p}}
 
-                        <button type="submit" class="btn w-100 mt-2" id="withdraw_dollar_btn">
-                            <span class="withdraw_dollar_btn-text">Save</span>
-                            <i class="fa-solid fa-spinner fa-spin text-white d-none" id="withdraw_dollar_spinner"></i>
+                        <button type="submit" class="btn w-100 mt-2" id="add_account_btn">
+                            <span class="add_account_btn-text">Save</span>
+                            <i class="fa-solid fa-spinner fa-spin text-white d-none" id="add_account_spinner"></i>
                         </button>
                     </form>
                 </div>
@@ -32,5 +32,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    const form = document.querySelector('#add_account_form');
+    const sellBtn = document.querySelector('#add_account_btn');
+    const spinner = document.querySelector('#add_account_spinner');
+    const btnText = document.querySelector('.add_account_btn-text');
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+
+        spinner.classList.remove('d-none');
+        btnText.textContent = '';
+        sellBtn.style.backgroundColor = 'rgb(46, 18, 114)';
+        sellBtn.disabled = true;
+
+        form.submit();
+    })
+</script>
 
 {% endblock %}

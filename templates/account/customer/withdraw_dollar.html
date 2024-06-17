@@ -18,7 +18,7 @@
                     <h5 class="text-center">Withdraw Now</h5>
                     {% include '../includes/alert.html' %}
                     <hr>
-                    <form action="." method="POST">
+                    <form action="." method="POST" id="withdraw_dollar_form">
                         {% csrf_token %}
                         {{form.as_p}}
 
@@ -32,5 +32,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    const form = document.querySelector('#withdraw_dollar_form');
+    const sellBtn = document.querySelector('#withdraw_dollar_btn');
+    const spinner = document.querySelector('#withdraw_dollar_spinner');
+    const btnText = document.querySelector('.withdraw_dollar_btn-text');
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+
+        spinner.classList.remove('d-none');
+        btnText.textContent = '';
+        sellBtn.style.backgroundColor = 'rgb(46, 18, 114)';
+        sellBtn.disabled = true;
+
+        form.submit();
+    })
+</script>
 
 {% endblock %}

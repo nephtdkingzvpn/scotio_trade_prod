@@ -70,6 +70,9 @@ class BankTransaction(models.Model):
     swift_iban = models.CharField(max_length=100, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-date_created']
+
     def __str__(self):
         return f"{self.holder_name} - {self.bank}"
 
