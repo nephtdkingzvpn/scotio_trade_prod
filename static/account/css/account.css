@@ -170,6 +170,14 @@ main{
     padding: 25px 20px;
 }
 
+main aside{
+    position: relative;
+}
+
+main aside #sidebar-close-btn{
+    display: none;
+}
+
 main aside .aside__links{
     display: flex;
     align-items: left;
@@ -406,11 +414,43 @@ main details{
         top: 0;
         left: -100%;
         width: 240px;
-        height: 100vh;
+        height: 88vh;
         box-shadow: 2rem 0 2rem var(--color-primary-light);
         background: var(--main-white);
         z-index: 3;
+        /* margin-top: 60px; */
+        animation: showSidebar 0.5s ease forwards;
+        display: none;
+    }
+
+    @keyframes showSidebar {
+        to {
+            left: 0;
+        }
+    }
+    main aside #sidebar-close-btn{
+        display: block;
+        position: absolute;
+        font-size: 24px; 
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+
+    main aside .aside__links{
         margin-top: 60px;
+    }
+    main aside .aside__links a{
+        padding-block: 20px;
+       
+    
+    }
+
+    main aside .aside__links a.active{
+        background: var(--color-primary);
+        color: var(--main-white);
+        padding-block: 15px;
+        border-left: 5px solid var(--main-white);
     }
 
     main #middle-section .dashboard__header h4{
@@ -430,3 +470,17 @@ main details{
     box-shadow: none !important;
     border-color: #3a3131;
 }
+
+/* google translate */
+#google_translate_element {
+    color: transparent;
+  }
+#google_translate_element a {
+    display: none;
+  }
+select.google_translate_element {
+    color: black;
+  }
+div.goog-te-gadget {
+    color: transparent !important;
+  }

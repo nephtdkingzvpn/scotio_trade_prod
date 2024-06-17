@@ -12,6 +12,8 @@ from .get_aapl_data import (get_data, get_live_crypto_rates,
                 convert_crypto_to_usd, convert_usd_to_crypto)
 from .models import BankAccount, Profile, BankTransaction, Balance
 from . import forms
+from .email_utils import send_html_email
+
 
 def login_user_view(request):
     if request.method == 'POST':
@@ -41,9 +43,9 @@ def customer_dashboard(request):
 
             ethereum_rate = convert_crypto_to_usd(balance.etheriun, rates, crypto_type='ethereum')
 
-        context = {'rates':rates, 'btc':bitcoin_rate, 'eth':ethereum_rate}
+        context = {'rates':rates, 'btc':bitcoin_rate, 'eth':ethereum_rate, 'balance':balance}
     except:
-        context = {'rates':'fetching', 'btc':'fetching', 'eth':'fetching'}
+        context = {'rates':'fetching', 'btc':'fetching', 'eth':'fetching', 'balance':balance}
     finally:
         return render(request, 'account/customer/customer_dashboard.html', context)
 
@@ -197,7 +199,9 @@ def crypto_wallet_view(request):
         
         usdt_rate = convert_crypto_to_usd(balance.usdt, rates, crypto_type='usdt')
 
-    context = {'rates':rates, 'btc':bitcoin_rate, 'eth':ethereum_rate, 'usdt':usdt_rate}
+        context = {'rates':rates, 'btc':bitcoin_rate, 'eth':ethereum_rate, 'usdt':usdt_rate}
+    else:
+        context = {}
     return render(request, 'account/customer/crypto_wallet.html', context)
 
 def list_bank_accounts_view(request):
@@ -272,3 +276,33 @@ def crypto_price_history(request):
     timestamps = [price[0] for price in prices]
     prices = [price[1] for price in prices]
     return JsonResponse({'timestamps': timestamps, 'prices': prices})
+
+
+def analytics_view(request):
+    return render(request, 'account/customer/analytics.html')
+
+
+def help_center_view(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        message = request.POST['message']
+
+        context = {
+            'name': name,
+            'email': email,
+            'subject': subject,
+            'message': message,
+        }
+        template_name = 'emails/email_from_customer.html'
+        print(name,email,message,subject)
+        try:
+            send_html_email('Customer Message', template_name, context)
+            messages.success(request, 'Your message is sent successfully, a customer care representative will get back to you as soon as possible.')
+        except:
+            messages.error(request, 'Message Failed, please try again')
+        finally:
+            return redirect('account:help_center')
+
+    return render(request, 'account/customer/help_center.html')

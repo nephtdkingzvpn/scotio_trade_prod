@@ -1,0 +1,30 @@
+{% extends '../base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+
+
+<div class="container-fluid pt-5">
+    <div class="row gx-5">
+        <div class="col-md-6">
+            <h5 class="mb-4">Market Overview</h5>
+            {% include '../tradingviewchart/market_overview.html' %}
+        </div>
+        <div class="col-md-6">
+            <h5 class="mb-4">Stock Market</h5>
+            {% include '../tradingviewchart/stockmarket.html' %}
+        </div>
+    </div>
+    
+    
+</div>
+
+{% endblock %}
+<!-- <div class="row mt-3">
+        <div class="col-md-12">
+            {% include '../tradingviewchart/marketdata.html' %}
+        </div>
+    </div> -->

@@ -1,0 +1,66 @@
+{% extends '../base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center">Contact Us Now</h5>
+                    {% include '../includes/alert.html' %}
+                    <hr>
+                    <form action="." method="POST" id="help_center_form">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name:</label>
+                            <input type="text" name="name" class="form-control" id="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" name="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" name="subject" class="form-control" id="subject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" name="message" id="message" rows="3" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn w-100 mt-2" id="help_center_btn">
+                            <span class="help_center_btn-text">Send</span>
+                            <i class="fa-solid fa-spinner fa-spin text-white d-none" id="help_center_spinner"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.querySelector('#help_center_form');
+    const sellBtn = document.querySelector('#help_center_btn');
+    const spinner = document.querySelector('#help_center_spinner');
+    const btnText = document.querySelector('.help_center_btn-text');
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+
+        spinner.classList.remove('d-none');
+        btnText.textContent = '';
+        sellBtn.style.backgroundColor = 'rgb(46, 18, 114)';
+        sellBtn.disabled = true;
+
+        form.submit();
+    })
+</script>
+
+{% endblock %}

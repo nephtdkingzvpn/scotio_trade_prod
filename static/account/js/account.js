@@ -11,6 +11,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
+// togle sidebar
+const closeBtn = document.querySelector('#sidebar-close-btn');
+const menuBtn = document.querySelector('#menu-bar');
+const sidebar = document.querySelector('aside');
+
+menuBtn.addEventListener('click', ()=>{
+  sidebar.style.display = 'block';
+});
+
+closeBtn.addEventListener('click', () => {
+  sidebar.style.display = 'none';
+});
+
+
+
 
 
 

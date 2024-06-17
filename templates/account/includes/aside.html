@@ -4,12 +4,14 @@
     <a href="{% url 'account:exchange_view' %}" class="side__link"><i class="fa-solid fa-money-bill-trend-up"></i> Exchange</a>
     <a href="{% url 'account:crypto_wallet_view' %}" class="side__link"><i class="fa-brands fa-bitcoin"></i>Crypto Wallet</a>
     <a href="{% url 'account:list_bank_account' %}" class="side__link"><i class="fa-solid fa-tent-arrow-left-right"></i>Withdraw</a>
-    <a href="" class="side__link"><i class="fa-solid fa-chart-line"></i>Analytics</a>
-    <a href="" class="side__link"><i class="fa-solid fa-question"></i>Help Center</a>
+    <a href="{% url 'account:analytics' %}" class="side__link"><i class="fa-solid fa-chart-line"></i>Analytics</a>
+    <a href="{% url 'account:help_center' %}" class="side__link"><i class="fa-solid fa-question"></i>Help Center</a>
     <a href="" class="side__link"><i class="fa-solid fa-gear"></i>Settings</a>
+    <a><div id="google_translate_element"></div>
+    </a>
 </div>
 
-<div class="update__stuff">
+<div class="update__stuff d-none d-md-block">
     <div class="card border-0 mt-5 bg-light">
         <div class="card-body">
             <div class="row align-items-center justify-content-center">

@@ -574,7 +574,7 @@ main .recent-transactions .transaction .card-details .card{
         /* after main aside .updates/ */
         display: none;
          /* after we write the animation !!! */
-         animation: showSidebar 0.5s ease forwards;
+        animation: showSidebar 0.5s ease forwards;
     }
 
     @keyframes showSidebar {
