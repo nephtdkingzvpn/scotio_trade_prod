@@ -1,5 +1,498 @@
-{% if not request.user.is_authenticated %}
-<a href="{% url 'account:login' %}">Login</a>
-{% else %}
-<a href="">Logout</a>
-{% endif %}
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ##### Welcome Area Start ##### -->
+<section class="welcome_area clearfix dzsparallaxer auto-init ico fullwidth" data-options="{direction: " normal"}"="" id="home">
+    <div class="divimage dzsparallaxer--target" style="width: 101%; height: 130%; background-image: url(/static/frontend/images/bg-2.png)"></div>
+
+    <!-- Hero Content -->
+    <div class="hero-content dark-blue">
+        <!-- blip -->
+        <div class="dream-blip blip1"></div>
+        <div class="dream-blip blip2"></div>
+        <div class="dream-blip blip3"></div>
+        <div class="dream-blip blip4"></div>
+
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <!-- Welcome Content -->
+                <div class="col-12 col-lg-6 col-md-12">
+                    <div class="welcome-content">
+                        <div class="promo-section">
+                            <div class="integration-link">
+                                <span class="integration-icon">
+                                    <img draggable="false" src="{% static 'frontend/images/img-dollar.svg' %}" width="24" height="24" alt="">
+                                </span>
+                                <span class="integration-text">Discover a new ways to enjoy your World!</span>
+                            </div>
+                        </div>
+                        <h1 class="wow fadeInUp" data-wow-delay="0.2s">Powerful investment &amp; Trading  <img src="{% static 'frontend/images/money.png' %}"> Solutions.</h1>
+                        <p class="wow fadeInUp" data-wow-delay="0.3s">We have over 15 year exprience in business consultting arena. We have over 15 year exprience in business consultting arena and artficial intelligence.</p>
+                        <div class="dream-btn-group wow fadeInUp" data-wow-delay="0.4s">
+                            <a href="#" class="btn dream-btn mr-3">Learn More</a>
+                            <a href="#" class="btn dream-btn">Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Welcome Video Area -->
+                <div class="col-12 col-lg-6 col-md-12">
+                    <div class="main-ilustration wow fadeInUp" data-wow-delay="0.5s">
+                          
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### Hero Area End ##### -->
+
+<!-- social -->
+<div class="vertical-social">
+    <ul>
+        <li><a href="#"><i class="fa fa-telegram" aria-hidden="true"></i></a></li>
+        <li><a href="#"><i class="fa fa-medium" aria-hidden="true"></i></a></li>
+        <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+        <li><a href="#"> <i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+        <li><a href="#"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+        <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+        <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+        
+    </ul>                  
+</div>
+<!-- social end -->
+
+
+<!-- ##### trust Area Start ##### -->
+<div class="trust-section section-padding-100">
+    <div class="section-heading text-center">
+        
+        <div class="dream-dots justify-content-center wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <h2 class="wow fadeInUp" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">We are trusted</h2>
+        <p class="wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">Because We work hard to keep your data safe and secure. We protect your account from unauthorized activities and We've got your back. We're available to you 24/7..</p>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                <!-- Single Cool Fact -->
+                <div class="trust-item text-center wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="ico-platform-logo">
+                        <img draggable="false" src="{% static 'frontend/images/1.png' %}" alt="">
+                    </div>
+                    <!-- Single Cool Detail -->
+                    <div class="check">
+                        <!-- <div class="value">8.9</div> -->
+                        <div class="check-icon"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                <!-- Single Cool Fact -->
+                <div class="trust-item text-center wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="ico-platform-logo">
+                        <img draggable="false" src="{% static 'frontend/images/2.png' %}" alt="">
+                    </div>
+                    <!-- Single Cool Detail -->
+                    <div class="check">
+                        <div class="value">8.9</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                <!-- Single Cool Fact -->
+                <div class="trust-item text-center wow fadeInUp" data-wow-delay="0.4s">
+                    <div class="ico-platform-logo">
+                        <img draggable="false" src="{% static 'frontend/images/3.png' %}" alt="">
+                    </div>
+                    <!-- Single Cool Detail -->
+                    <div class="check">
+                        <!-- <div class="value">8.9</div> -->
+                        <div class="check-icon"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                <!-- Single Cool Fact -->
+                <div class="trust-item text-center wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="ico-platform-logo">
+                        <img draggable="false" src="{% static 'frontend/images/4.png' %}" alt="">
+                    </div>
+                    <!-- Single Cool Detail -->
+                    <div class="check">
+                        <!-- <div class="value">8.9</div> -->
+                        <div class="check-icon"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                <!-- Single Cool Fact -->
+                <div class="trust-item text-center wow fadeInUp" data-wow-delay="0.6s">
+                    <div class="ico-platform-logo">
+                        <img draggable="false" src="{% static 'frontend/images/5_1.png' %}" alt="">
+                    </div>
+                    <!-- Single Cool Detail -->
+                    <div class="check">
+                       <div class="value">7.4</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                <!-- Single Cool Fact -->
+                <div class="trust-item text-center wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="ico-platform-logo">
+                        <img draggable="false" src="{% static 'frontend/images/6_1.png' %}" alt="">
+                    </div>
+                    <!-- Single Cool Detail -->
+                    <div class="check">
+                        <!-- <div class="value">8.9</div> -->
+                        <div class="check-icon"></div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!-- ##### trust Area End ##### -->
+
+<!-- ##### About Us Area Start ##### -->
+<section class="about-us-area section-padding-0-100 clearfix" id="about">
+    <div class="container">
+        <div class="row align-items-center">
+            
+            <div class="col-12 col-lg-6">
+                <div class="welcome-meter wow fadeInUp" data-wow-delay="0.7s">
+                    <img draggable="false" src="{% static 'frontend/images/about1.png' %}" class="img-responsive center-block" alt="">
+                    <!-- client meta -->
+                    <div class="growing-company text-center mt-30 wow fadeInUp" data-wow-delay="0.8s">
+                        <p>* Already growing up <span class="counter">5236</span> company</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="who-we-contant">
+                    
+                    <div class="dream-dots wow fadeInUp" data-wow-delay="0.2s">
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <h4 class="wow fadeInUp" data-wow-delay="0.3s">We help customers achieve there markeing and trading needs.</h4>
+                    <p class="wow fadeInUp" data-wow-delay="0.4s">We help you Plan your next move with in-depth research by our independent financial analysist and 24 hours support.</p>
+                    <p class="wow fadeInUp" data-wow-delay="0.5s">We also help you earn more interest on your uninvested cash. Keep tabs on the price movement of stocks and ETFs with Level II market data from Nasdaq. We help you enhance your trading skills to minimize any sorts of lost.</p>
+                    <a class="btn dream-btn mt-30 wow fadeInUp" data-wow-delay="0.6s" href="#">Read More</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- ##### About Us Area End ##### -->
+
+<!-- ##### About Us Area Start ##### -->
+<section class="about-us-area section-padding-0-100 clearfix">
+    <div class="container">
+        <div class="row align-items-center">
+
+            <div class="col-12 col-lg-6">
+                <div class="who-we-contant">
+                    
+                    <div class="dream-dots wow fadeInUp" data-wow-delay="0.2s">
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <h4 class="wow fadeInUp" data-wow-delay="0.3s">It is up to you, How we work together .
+                    </h4>
+                    <p class="wow fadeInUp" data-wow-delay="0.4s">Access a full range of tools, resources, and expertise to invest the way you want. There is no advisory fee or commissions charged. Pursue your goals confidently and also remember to trade carefully.</p>
+                    <p class="wow fadeInUp" data-wow-delay="0.5s">Our services relate to speculative financial products offered over the counter. These products come with a high risk of losing money rapidly due to margin requirements and thus are not appropriate for all people. Under no circumstances shall Stockfex have any liability to any person or entity for any loss or damage in whole or part caused by, resulting from, or relating to any financial activity.</p>
+                    <a class="btn dream-btn mt-30 wow fadeInUp" data-wow-delay="0.6s" href="#">Read More</a>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="welcome-meter wow fadeInUp" data-wow-delay="0.7s">
+                    <img draggable="false" src="{% static 'frontend/images/solution.png' %}" class="center-block" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### About Us Area End ##### -->
+
+<!-- watch video -->
+<section class="demo-video section-before section-padding-100">
+    <div class="container">
+        <div class="section-heading text-center">
+                    
+                    <div class="dream-dots justify-content-center wow fadeInUp" data-wow-delay="0.2s">
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <h2 class="wow fadeInUp" data-wow-delay="0.3s">Watch our demo video</h2>
+                    <!-- <p class="wow fadeInUp" data-wow-delay="0.4s">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis accumsan nisi Ut ut felis congue nisl hendrerit commodo.</p> -->
+                </div>
+        <!-- Welcome Video Area -->
+        <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1 col-sm-12">
+            <div class="welcome-video-area wow fadeInUp" data-wow-delay="0.5s">
+                <!-- Welcome Thumbnail -->
+                <div class="welcome-thumb">
+                    <img draggable="false" src="{% static 'frontend/images/bg-4.jpg' %}" alt="">
+                </div>
+                <!-- Video Icon -->
+                <div class="video-icon">
+                    <a href="https://www.youtube.com/watch?v=gbXEPHsTkgU" class="btn dream-btn video-btn" id="videobtn"><i class="fa fa-play"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><br>
+
+<div class="clearfix"></div>
+<!-- end watch video -->
+
+<!-- ##### Our Services Area Start ##### -->
+<section class="our_services_area section-padding-100-70 clearfix" id="services">
+    <div class="container">
+        
+        <div class="section-heading text-center">
+            
+            <div class="dream-dots justify-content-center wow fadeInUp" data-wow-delay="0.2s">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <h2 class="wow fadeInUp" data-wow-delay="0.3s">Our Core Services</h2>
+            <p class="wow fadeInUp" data-wow-delay="0.4s">Get diversified with different stock bundles and more knowledge on how to navigate.</p>
+        </div>
+            
+
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Content -->
+                <div class="service_single_content text-left mb-100 wow fadeInUp" data-wow-delay="0.2s">
+                    <!-- Icon -->
+                    <div class="service_icon">
+                        <img draggable="false" src="images/1_2.png" alt="">
+                    </div>
+                    <h6>Smart Trading Modules</h6>
+                    <p>ETFs AAP can remove some of the pressure from picking individual stocks. </p>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Content -->
+                <div class="service_single_content text-left mb-100 wow wow fadeInUp" data-wow-delay="0.3s">
+                    <!-- Icon -->
+                    <div class="service_icon">
+                        <img draggable="false" src="images/2_1.png" alt="">
+                    </div>
+                    <h6>Adaptive Social Assistant</h6>
+                    <p>Get the right to buy or sell at a specific date for a specific price. No commissions or hassles here either.</p>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Content -->
+                <div class="service_single_content text-left mb-100 wow fadeInUp" data-wow-delay="0.4s">
+                    <!-- Icon -->
+                    <div class="service_icon">
+                        <img draggable="false" src="images/3_2.png" alt="">
+                    </div>
+                    <h6>Analyzer of the News with powerful AII </h6>
+                    <p>Your satisfaction is guaranteed and your security is our priority. get started today.</p>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Content -->
+                <div class="service_single_content text-left mb-100 wow fadeInUp" data-wow-delay="0.5s">
+                    <!-- Icon -->
+                    <div class="service_icon">
+                        <img draggable="false" src="images/4_3.png" alt="">
+                    </div>
+                    <h6>Exchange Order Management</h6>
+                    <p>Access a full range of tools, resources, and expertise to invest the way you want.</p>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Content -->
+                <div class="service_single_content text-left mb-100 wow fadeInUp" data-wow-delay="0.6s">
+                    <!-- Icon -->
+                    <div class="service_icon">
+                        <img draggable="false" src="images/5.png" alt="">
+                    </div>
+                    <h6>Module of Price Notification</h6>
+                    <p>With Margin, you can preserve your extra cash by borrowing some from us to enhance your ability.</p>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+                <!-- Content -->
+                <div class="service_single_content text-left mb-100 wow fadeInUp" data-wow-delay="0.7s">
+                    <!-- Icon -->
+                    <div class="service_icon">
+                        <img draggable="false" src="images/6.png" alt="">
+                    </div>
+                    <h6>Crypto Trading Platform</h6>
+                    <p>Whether you want to manage retirement planning on your own or have us guide you, we're here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### Our Services Area End ##### -->
+
+<!-- ##### Our roadmap Area start ##### -->
+<section class="roadmap" style="padding-bottom:0" id="roadmap">
+    <div class="section-heading text-center">
+        
+        <div class="dream-dots justify-content-center wow fadeInUp" data-wow-delay="0.2s">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <h2 class="wow fadeInUp" data-wow-delay="0.3s">Our ICO Roadmap</h2>
+        <!-- <p class="wow fadeInUp" data-wow-delay="0.4s">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis accumsan nisi Ut ut felis congue nisl hendrerit commodo.</p> -->
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="timeline-split">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="timeline section-box-margin">
+                    <div class="block block-left">
+                       <h3>Platform Development Starts</h3>
+                       <span class="date">May 12, 2024</span> <span class="between">to</span> <span class="date">Jun 19, 2024</span>
+                       <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto adipisci provident officia animi.</p> -->
+                    </div>
+
+                    <div class="block block-right mt-30">
+                       <h3>Groundwork Preparation for ICO</h3>
+                       <span class="date">Aug 18, 2024</span> <span class="between">to</span> <span class="date">Sep 23, 2024</span>
+                       <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto adipisci provident officia animi.</p> -->
+                    </div>
+
+                    <div class="block block-left mt-30">
+                       <h3>Crypto Blockchain Release</h3>
+                       <span class="date">Oct 08, 2024</span> <span class="between">to</span> <span class="date">Nov 16, 2024</span>
+                       <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto adipisci provident officia animi.</p> -->
+                    </div>
+
+                    <div class="block block-right mt-30">
+                       <h3>Release Bank &amp; Cards Phase</h3>
+                       <span class="date">Dec 28, 2024</span> <span class="between">to</span> <span class="date">Jan 29, 2024</span>
+                       <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto adipisci provident officia animi.</p> -->
+                    </div>
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+<!-- ##### Our roadmap Area End ##### -->
+
+
+<!-- ##### Our features Area start ##### -->
+<section class="features section-padding-100">
+
+    <div class="section-heading text-center">
+        
+        <div class="dream-dots justify-content-center wow fadeInUp" data-wow-delay="0.2s">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <h2 class="wow fadeInUp" data-wow-delay="0.3s">Our Wallet Application</h2>
+        <p class="wow fadeInUp" data-wow-delay="0.4s">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis accumsan nisi Ut ut felis congue nisl hendrerit commodo.</p>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="services-column col-lg-5 col-lg-offset-1 col-md-10 offset-md-1 col-xs-10 offset-xs-1">
+                <!--Services Block Four-->
+                <div class="services-block-four">
+                    <div class="inner-box">
+                        <div class="icon-box">
+                            <span class="icon ti-mobile"></span>
+                        </div>
+                        <h3><a href="#">Powerfull Mobile and Online App</a></h3>
+                        <div class="text">Whether you want to invest on your own, or have us do the work, we have account choices for you. And we've got tools and resources to help along the way.</div>
+                        
+                    </div>
+                </div>
+
+                <!--Services Block Four-->
+                <div class="services-block-four">
+                    <div class="inner-box">
+                        <div class="icon-box">
+                            <span class="icon ti-widget"></span>
+                        </div>
+                        <h3><a href="#">Brings more Transparency and Speed</a></h3>
+                        <div class="text">With Stockfex, you get the flexibility to save for retirement, while balancing your long-term goals with your short-term needs.</div>
+                    </div>
+                </div>
+                
+                <!--Services Block Four-->
+                <div class="services-block-four" style="margin-bottom:0">
+                    <div class="inner-box">
+                        <div class="icon-box">
+                            <span class="icon ti-settings"></span>
+                        </div>
+                        <h3><a href="#">Special for Multiple Use Capabilities</a></h3>
+                        <div class="text">Our AI advisor will handle your investments, so you don't have to. Automated investing with no account minimums.2</div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="service-img-wrapper col-lg-6 col-md-12 col-sm-12">
+                <div class="image-box">
+                    <img draggable="false" src="{% static 'frontend/images/phone.png' %}" class="center-block img-responsive phone-img" alt="">
+                    <img draggable="false" src="{% static 'frontend/images/rings-bg.png' %}" class="center-block img-responsive rings " alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### Our features Area End ##### -->
+
+
+<!-- ##### Subscribe Area start ##### -->
+<section class="container " style="padding-bottom: 0px" id="start">
+    <div class="subscribe">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="subscribe-wrapper">
+                    
+                    <div class="service-text">
+                        <div class="col-lg-4 col-md-4 col-xs-12 text-center">
+                            <img src="{% static 'frontend/images/cash.png' %}" alt="">
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-xs-12 text-left">
+                            <div class="section-heading text-left">
+                                <h2 class="wow fadeInUp" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">Don't Miss Our News And Updates!</h2>
+                                <p class="wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">Yuu want to get regular updates, put your email below to subscribe for our newletters.</p>
+                            </div>
+                            <div class="group">
+                                <input type="text" name="subject" required="">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>enter your email</label>
+                                <button class="dream-btn"><i class="fa fa-paper-plane-o"></i></button>
+                            </div>
+                        </div>
+                        <!-- <div class="col-lg-5 text-left mt-30">
+                            <ul class="list-unstyled list-inline social-list">
+                                <li><a href=""><i class="fa fa-facebook-square"></i></a></li>
+                                <li><a href=""><i class="fa fa-twitter-square"></i></a></li>
+                                <li><a href=""><i class="fa fa-github-square"></i></a></li>
+                                <li><a href=""><i class="fa fa-instagram"></i></a></li>
+                                <li><a href=""><i class="fa fa-medium"></i></a></li>
+                            </ul>
+                        </div> -->
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>  
+</section>
+<!-- ##### Subscribe Area End ##### -->
+
+
+{% endblock %}
