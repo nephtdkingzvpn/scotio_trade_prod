@@ -1,1 +1,47 @@
-<a href="">Login</a>
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .container-fluid{
+        margin-top: 170px !important;
+    }
+    .bg-dark{
+        background: #141414 !important;
+    }
+    .btn-primary{
+        background-color: rgb(30, 30, 116) !important;
+        border: none;
+        outline: none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-4">
+            <div class="card bg-dark shadow" style="background-image: url(/static/frontend/images/pattern.png);">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Login</h2>
+                    <hr style="border-color: aliceblue;">
+                    <form action="">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label text-white">username</label>
+                            <input type="text" class="form-control" id="username">
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label text-white">Password</label>
+                            <input type="password" class="form-control" id="password">
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary w-100 fw-bold">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
