@@ -40,6 +40,24 @@ def get_data(symbol):
 
 
 # @cached(cache)
+# def get_live_crypto_rates():
+#     url = 'https://api.coingecko.com/api/v3/simple/price'
+#     params = {
+#         'ids': 'bitcoin,ethereum,tether',
+#         'vs_currencies': 'usd'
+#     }
+#     response = requests.get(url, params=params)
+    
+#     if response.status_code == 200:
+#         data = response.json()
+#         return {
+#             'bitcoin': data['bitcoin']['usd'],
+#             'ethereum': data['ethereum']['usd'],
+#             'tether': data['tether']['usd']
+#         }
+#     else:
+#         return None
+
 def get_live_crypto_rates():
     url = 'https://api.coingecko.com/api/v3/simple/price'
     params = {
@@ -50,12 +68,19 @@ def get_live_crypto_rates():
     
     if response.status_code == 200:
         data = response.json()
-        return {
+        rates = {
             'bitcoin': data['bitcoin']['usd'],
             'ethereum': data['ethereum']['usd'],
             'tether': data['tether']['usd']
         }
+        return rates
     else:
+        print(f"Request failed with status code {response.status_code}.")
+        try:
+            error_message = response.json()['error']
+            print(f"Error message: {error_message}")
+        except Exception as e:
+            print(f"Error parsing response JSON: {str(e)}")
         return None
 
 
