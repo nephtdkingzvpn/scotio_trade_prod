@@ -58,13 +58,14 @@ def get_data(symbol):
 #     else:
 #         return None
 
+@retry(wait=wait_exponential(multiplier=1, min=1, max=60), stop=stop_after_attempt(5))
 def get_live_crypto_rates():
     url = 'https://api.coingecko.com/api/v3/simple/price'
     params = {
         'ids': 'bitcoin,ethereum,tether',
         'vs_currencies': 'usd'
     }
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params, headers=HEADERS)
     
     if response.status_code == 200:
         data = response.json()
