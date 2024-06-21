@@ -4,10 +4,18 @@ from dotenv import load_dotenv
 import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 
+
+
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# cloudinary
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -26,7 +34,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # external apps
+    'cloudinary',
     'django.contrib.humanize',
+
 
     # my apps
     'account',
@@ -138,6 +148,14 @@ STATICFILES_DIRS=[
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#cloudinary api config
+cloudinary.config( 
+  	cloud_name = os.environ.get('CLOUD_NAME'),
+  	api_key = os.environ.get('API_KEY'),
+  	api_secret = os.environ.get('API_SECRET')
+)
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

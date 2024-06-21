@@ -47,7 +47,7 @@
                             <tbody>
                             {% for stock in active_stocks %}
                               <tr>
-                                <td>Logo here</td>
+                                <td><img src="{{stock.stock.picture.url}}" style="width: 16px;"></td>
                                 <td>{{stock.stock.company}}</td>
                                 <td class="text-muted">{{stock.get_number_of_bonds}} Bonds</td>
                                 <td>${{stock.amount|intcomma}}</td>

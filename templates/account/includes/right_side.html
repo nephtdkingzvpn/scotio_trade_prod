@@ -18,7 +18,7 @@
                     <hr class="mb-0">
                     {% for stock in stock_list %}
                         <div class="single__trade">
-                            <img src="{% static 'account/images/tesla.png' %}" style="width: 30px;">
+                            <img src="{{stock.stock.picture.url}}" style="width: 30px;">
                             <p class="brand">{{stock.stock.company}}</p>
                             <p class="trade__bond">{{stock.get_number_of_bonds}} <br>bonds</p>
                             <p class="trade__price fw-bold">${{stock.amount|intcomma}} <br>
