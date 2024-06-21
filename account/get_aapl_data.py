@@ -40,49 +40,50 @@ def get_data(symbol):
 
 
 # @cached(cache)
+def get_live_crypto_rates():
+    url = 'https://api.coingecko.com/api/v3/simple/price'
+    params = {
+        'ids': 'bitcoin',
+        # 'ids': 'bitcoin,ethereum,tether',
+        'vs_currencies': 'usd'
+    }
+    response = requests.get(url, params=params)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return {
+            'bitcoin': data['bitcoin']['usd'],
+            'ethereum': data['ethereum']['usd'],
+            'tether': data['tether']['usd']
+        }
+    else:
+        return None
+
+# @retry(wait=wait_exponential(multiplier=1, min=1, max=60), stop=stop_after_attempt(5))
 # def get_live_crypto_rates():
 #     url = 'https://api.coingecko.com/api/v3/simple/price'
 #     params = {
 #         'ids': 'bitcoin,ethereum,tether',
 #         'vs_currencies': 'usd'
 #     }
-#     response = requests.get(url, params=params)
+#     response = requests.get(url, params=params, headers=HEADERS)
     
 #     if response.status_code == 200:
 #         data = response.json()
-#         return {
+#         rates = {
 #             'bitcoin': data['bitcoin']['usd'],
 #             'ethereum': data['ethereum']['usd'],
 #             'tether': data['tether']['usd']
 #         }
+#         return rates
 #     else:
+#         print(f"Request failed with status code {response.status_code}.")
+#         try:
+#             error_message = response.json()['error']
+#             print(f"Error message: {error_message}")
+#         except Exception as e:
+#             print(f"Error parsing response JSON: {str(e)}")
 #         return None
-
-@retry(wait=wait_exponential(multiplier=1, min=1, max=60), stop=stop_after_attempt(5))
-def get_live_crypto_rates():
-    url = 'https://api.coingecko.com/api/v3/simple/price'
-    params = {
-        'ids': 'bitcoin,ethereum,tether',
-        'vs_currencies': 'usd'
-    }
-    response = requests.get(url, params=params, headers=HEADERS)
-    
-    if response.status_code == 200:
-        data = response.json()
-        rates = {
-            'bitcoin': data['bitcoin']['usd'],
-            'ethereum': data['ethereum']['usd'],
-            'tether': data['tether']['usd']
-        }
-        return rates
-    else:
-        print(f"Request failed with status code {response.status_code}.")
-        try:
-            error_message = response.json()['error']
-            print(f"Error message: {error_message}")
-        except Exception as e:
-            print(f"Error parsing response JSON: {str(e)}")
-        return None
 
 
 def convert_usd_to_crypto(amount_in_usd, rates, crypto_type='bitcoin'):
