@@ -1,5 +1,5 @@
 from decimal import Decimal, ROUND_DOWN
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.humanize.templatetags.humanize import intcomma
@@ -17,17 +17,23 @@ from .email_utils import send_html_email
 
 def login_user_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        username = request.POST.get('email')
         password = request.POST.get('password')
+
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('frontend:home')
+            return redirect('account:customer_dashboard')
         else:
             messages.error(request, 'Invalid username or password.')
             return redirect('account:login')
             
     return render(request, 'frontend/login.html')
+
+
+def logout_user_view(request):
+    logout(request)
+    return redirect('account:login')
 
 
 def customer_dashboard(request):

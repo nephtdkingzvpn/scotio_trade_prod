@@ -3,7 +3,11 @@
 <nav class="my__navbar shadow">
     <div class="container-fluid">
         <div class="navbar__wrapper">
-            <img src="{% static 'account/images/logo.png' %}" alt="" class="logo">
+            <div class="my-lgogo" style="display: flex; align-items: center; gap: 5px;">
+                <img src="{% static 'frontend/images/logo.png' %}" alt="" class="logo">
+                <h4 class="mt-2 fw-bold text-danger">STOCKFEX</h4>
+            </div>
+            <!-- <img src="{% static 'account/images/logo.png' %}" alt="" class="logo"> -->
             <div class="search__bar">
                 <input type="search">
                 <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>

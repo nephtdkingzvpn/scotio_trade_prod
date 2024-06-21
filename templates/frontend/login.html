@@ -15,6 +15,11 @@
         border: none;
         outline: none;
     }
+
+    .btn-primary:hover{
+        background-color: rgb(45, 45, 177) !important;
+  
+    }
 </style>
 
 <div class="container-fluid">
@@ -23,25 +28,71 @@
             <div class="card bg-dark shadow" style="background-image: url(/static/frontend/images/pattern.png);">
                 <div class="card-body">
                     <h2 class="text-center mb-4">Login</h2>
+                    {% include '../account/includes/alert.html' %}
                     <hr style="border-color: aliceblue;">
-                    <form action="">
+                    <form action="{% url 'account:login' %}" method="POST" id="login_form">
                         {% csrf_token %}
 
                         <div class="mb-3">
-                            <label for="username" class="form-label text-white">username</label>
-                            <input type="text" class="form-control" id="username">
-                        </div>
-                        <div class="mb-4">
-                            <label for="password" class="form-label text-white">Password</label>
-                            <input type="password" class="form-control" id="password">
+                            <label for="email" class="form-label text-white">Email</label>
+                            <input type="text" name="email" class="form-control" id="email">
                         </div>
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-primary w-100 fw-bold">Login</button>
+                            <label for="password" class="form-label text-white">Password</label>
+                            <input type="password" name="password" class="form-control" id="password">
                         </div>
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" value="" id="show_pass">
+                            <label class="form-check-label text-white" for="show_pass">
+                              Show Password
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary w-100 mt-2" id="login_btn">
+                                <span class="login_btn-text">Login</span>
+                                <i class="fa-solid fa-spinner fa-spin text-white d-none" id="login_spinner"></i>
+                            </button>
+                        </div>
+                        
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const showPassword = document.querySelector('#show_pass');
+    const password = document.querySelector('#password');
+
+    // Function to toggle the password visibility
+    function togglePasswordVisibility() {
+        if (showPassword.checked) {
+            password.type = 'text';
+        } else {
+            password.type = 'password';
+        }
+    }
+
+    // Attach event listener to the checkbox
+    showPassword.addEventListener('change', togglePasswordVisibility);
+</script>
+
+<script>
+    const form = document.querySelector('#login_form');
+    const sellBtn = document.querySelector('#login_btn');
+    const spinner = document.querySelector('#login_spinner');
+    const btnText = document.querySelector('.login_btn-text');
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+
+        spinner.classList.remove('d-none');
+        btnText.textContent = '';
+        sellBtn.style.backgroundColor = 'rgb(46, 18, 114)';
+        sellBtn.disabled = true;
+
+        form.submit();
+    })
+</script>
 {% endblock %}

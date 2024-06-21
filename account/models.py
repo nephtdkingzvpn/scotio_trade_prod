@@ -33,8 +33,8 @@ class Profile(models.Model):
 
 class Balance(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    bitcoin = models.FloatField()
-    etheriun = models.FloatField()
+    bitcoin = models.FloatField(default=0.0)
+    etheriun = models.FloatField(default=0.0)
     usdt = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
     def __str__(self):
