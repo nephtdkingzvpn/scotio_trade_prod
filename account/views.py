@@ -288,14 +288,11 @@ def withdraw_dollars_view(request, pk):
 
 def crypto_price_history(request):
     data = fetch_history_with_caching()
-
-    if data is not None:
-        prices = data['prices']
-        timestamps = [price[0] for price in prices]
-        prices = [price[1] for price in prices]
-        return JsonResponse({'timestamps': timestamps, 'prices': prices})
-    else:
-        pass
+    prices = data['prices']
+    timestamps = [price[0] for price in prices]
+    prices = [price[1] for price in prices]
+    return JsonResponse({'timestamps': timestamps, 'prices': prices})
+    
 
 
 def analytics_view(request):
