@@ -8,8 +8,8 @@ import datetime
 import requests
 
 # my imports
-from .get_aapl_data import (get_data, get_live_crypto_rates, 
-                convert_crypto_to_usd, convert_usd_to_crypto)
+from .get_aapl_data import (get_data, convert_crypto_to_usd, convert_usd_to_crypto)
+from .fetch_crypto import fetch_crypto_with_caching
 from .models import BankAccount, Profile, BankTransaction, Balance
 from . import forms
 from .email_utils import send_html_email
@@ -38,7 +38,7 @@ def logout_user_view(request):
 
 def customer_dashboard(request):
     try:
-        rates = get_live_crypto_rates()
+        rates = fetch_crypto_with_caching()
         balance = Balance.objects.get(user=request.user)
 
         conversions = None
@@ -49,7 +49,9 @@ def customer_dashboard(request):
 
             ethereum_rate = convert_crypto_to_usd(balance.etheriun, rates, crypto_type='ethereum')
 
-        context = {'rates':rates, 'btc':bitcoin_rate, 'eth':ethereum_rate, 'balance':balance}
+            context = {'rates':rates, 'btc':bitcoin_rate, 'eth':ethereum_rate, 'balance':balance}
+        else:
+            context = {}
     except:
         context = {'rates':'fetching', 'btc':'fetching', 'eth':'fetching', 'balance':balance}
     finally:
@@ -112,7 +114,7 @@ def exchange_view(request):
         balance = Balance.objects.get(user=request.user)
         selected_option = request.POST.get('selected_option')
         amount = request.POST.get('amount')
-        rates = get_live_crypto_rates()
+        rates = fetch_crypto_with_caching()
 
         # check if amount in input is less than the user"s balance
         if Decimal(amount) > user.dollar_balance:
@@ -151,7 +153,7 @@ def exchange_crypto_tousd_view(request):
         balance = Balance.objects.get(user=request.user)
         selected_option = request.POST.get('selected_option')
         amount = request.POST.get('amount')
-        rates = get_live_crypto_rates()
+        rates = fetch_crypto_with_caching()
 
         if Decimal(amount) < Decimal(100):
             messages.error(request, 'Exchange of below $100 is not allowed.')
@@ -192,7 +194,7 @@ def exchange_crypto_tousd_view(request):
     return render(request, 'account/customer/exchange.html', )
 
 def crypto_wallet_view(request):
-    rates = get_live_crypto_rates()
+    rates = fetch_crypto_with_caching()
     balance = Balance.objects.get(user=request.user)
 
     conversions = None

@@ -3,8 +3,6 @@ from cachetools import cached, TTLCache
 from tenacity import retry, wait_exponential, stop_after_attempt
 from decimal import Decimal, ROUND_DOWN
 
-from .request_retry import requests_retry_session
-
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -63,32 +61,6 @@ def get_data(symbol):
 #         }
 #     else:
 #         return None
-
-
-def get_live_crypto_rates():
-    url = 'https://api.coingecko.com/api/v3/simple/price'
-    params = {
-        'ids': 'bitcoin,ethereum,tether',
-        'vs_currencies': 'usd'
-    }
-    
-    session = requests_retry_session()
-    try:
-        response = session.get(url, params=params)
-        response.raise_for_status()  # Raise an exception for bad response status
-
-        if response.status_code == 200:
-            data = response.json()
-            return {
-                'bitcoin': data['bitcoin']['usd'],
-                'ethereum': data['ethereum']['usd'],
-                'tether': data['tether']['usd']
-            }
-        else:
-            return None
-    except requests.exceptions.RequestException as e:
-        print(f"Request failed: {e}")
-        return None
 
 
 def convert_usd_to_crypto(amount_in_usd, rates, crypto_type='bitcoin'):

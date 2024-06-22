@@ -6,7 +6,7 @@ from cloudinary.models import CloudinaryField
 
 # my imports
 from .managers import CustomUserManager
-from .get_aapl_data import get_live_crypto_rates
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
