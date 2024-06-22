@@ -1,0 +1,49 @@
+{% extends './base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="text-center mb-3">Active Users List</h4>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                          <tr>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Balance</th>
+                            <th scope="col">Bitcoin</th>
+                            <th scope="col">Ethereum</th>
+                            <th scope="col">USDT</th>
+                            <th scope="col">Date Created</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users_list%}
+                          <tr>
+                            <td>{{user.profile.full_name}}</td>
+                            <td>{{user.email}}</td>
+                            <td>${{user.profile.dollar_balance|intcomma}}</td>
+                            <td>{{user.balance.bitcoin}}</td>
+                            <td>{{user.balance.etheriun}}</td>
+                            <td>{{user.balance.usdt}}</td>
+                            <td>${{user.profile.date_created}}</td>
+                            <td><a href="" class="btn-table btn btn-info btn-small w-100 fw-bold text-white">Edit</a></td>
+                            <td><a href="" class="btn-table btn btn-danger  btn-small w-100 fw-bold">Delete</a></td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

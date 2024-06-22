@@ -3,7 +3,7 @@ from cachetools import TTLCache
 import time
 
 # Initialize a TTLCache with a maximum size and TTL (expire_after)
-cache = TTLCache(maxsize=100, ttl=1800)  # Cache size of 100 items, TTL of 60 seconds
+cache = TTLCache(maxsize=100, ttl=600)  # Cache size of 100 items, TTL of 60 seconds
 
 # Function to fetch live crypto rates with caching
 def get_live_crypto_rates():

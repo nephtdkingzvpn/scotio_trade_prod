@@ -9,7 +9,8 @@ urlpatterns = [
     path('account/', include('account.urls', namespace="account")),
     path('stock/', include('stock.urls', namespace="stock")),
     path('crypto/', include('crypto.urls', namespace="crypto")),
+    path('myadmin/', include('myadmin.urls', namespace="myadmin")),
 ]
-
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 # if settings.DEBUG:
 #     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
