@@ -4,7 +4,7 @@ certifi==2024.6.2
 charset-normalizer==3.3.2
 cloudinary==1.40.0
 dj-database-url==2.2.0
-Django==4.6
+Django==4.2
 django-cockroachdb==4.6
 gunicorn==22.0.0
 idna==3.7
