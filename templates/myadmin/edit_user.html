@@ -1,0 +1,54 @@
+{% extends './base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">        
+                        <h4 class="text-center mb-3">Edit {{profile.full_name}}'s information</h4>
+                        {% include '../account/includes/alert.html' %}
+                        {% include './form_errors.html' %}
+
+                        {% if profile_form.errors %}
+                            <p class="text-white fw-bold">Please correct the following errors:</p>
+                            {% for field in profile_form %}
+                                {% if field.errors %}
+                                <div class="alert alert-warning" role="alert">
+                                    {{ field.label }}: {{ field.errors|striptags }}
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <hr>
+                        <form action="." method="POST" enctype="multipart/form-data" id="myadmin_form">
+                            {% csrf_token%}
+
+                            
+                            <div class="mb-3">
+                                <label for="{{form.email.id_for_label}}" class="form-label">Email:</label>
+                                {{form.email}}
+                            </div>
+                            {{profile_form.as_p}}
+
+                            <button type="submit" class="btn btn-secondary w-100 fw-bold mt-4" id="myadmin_btn">
+                                <span id="myadmin_btn_text">Update</span>
+                                <i class="fa-solid fa-spinner fa-spin text-white d-none" id="myadmin_spinner"></i>
+                            </button>
+                        </form>     
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>
+
+
+<script>
+    
+</script>
+{% endblock %}

@@ -31,3 +31,17 @@ class ProfileCreationForm(forms.ModelForm):
             field.widget.attrs.update({
                 'class': 'form-control',
             })
+
+
+class CustomUserEditForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email']
+
+    def __init__(self, *args, **kwargs):
+        super(CustomUserEditForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control',
+            })

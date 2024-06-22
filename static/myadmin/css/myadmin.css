@@ -21,6 +21,10 @@ a{
     border: none;
 }
 
+.btn:hover{
+    background-color: #181818;
+}
+
 .btn:focus{
     outline: none;
     border: none;
@@ -28,7 +32,7 @@ a{
 
 .sidebar{
     background-color: var(--main-black);
-    height: 100%;
+    min-height: 100vh;
     padding: 20px 20px;
     /* position: fixed; */
     /* top: 0; */
@@ -80,3 +84,15 @@ a{
 /* .main{
     background-color: var(--main-blue);
 } */
+
+
+
+@media (max-width: 1100px){
+    body{
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar{
+        display: none;
+    }
+}

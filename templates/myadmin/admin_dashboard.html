@@ -10,6 +10,7 @@
             <div class="card-body">
                 <h4 class="text-center mb-3">Active Users List</h4>
                 <hr>
+                {% include '../account/includes/alert.html' %}
                 <div class="table-responsive">
                     <table class="table table-condensed">
                         <thead>
@@ -35,12 +36,13 @@
                             <td>{{user.balance.etheriun}}</td>
                             <td>{{user.balance.usdt}}</td>
                             <td>${{user.profile.date_created}}</td>
-                            <td><a href="" class="btn-table btn btn-info btn-small w-100 fw-bold text-white">Edit</a></td>
-                            <td><a href="" class="btn-table btn btn-danger  btn-small w-100 fw-bold">Delete</a></td>
+                            <td><a href="{% url 'myadmin:detail_user' user.pk %}" class="btn-table btn btn-primary btn-small w-100 fw-bold text-white">More Details</a></td>
+                            <td><a href="{% url 'myadmin:edit_user' user.pk %}" class="btn-table btn btn-info btn-small w-100 fw-bold text-white">Edit</a></td>
+                            <td><a href="{% url 'myadmin:delete_user' user.pk %}" class="btn-table btn btn-danger  btn-small w-100 fw-bold">Delete</a></td>
                           </tr>
                         {% endfor %}
                         </tbody>
-                      </table>
+                    </table>
                 </div>
             </div>
         </div>

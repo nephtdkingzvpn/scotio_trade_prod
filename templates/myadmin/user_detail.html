@@ -1,0 +1,97 @@
+{% extends './base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+<style>
+    .profile_img{
+        width: 200px; 
+        height: 200px; 
+        object-fit: cover;
+        border-radius: 50%;
+    }
+    p{
+        font-size: 16px;
+        margin: 0;
+        margin-bottom: 10px;
+    }
+</style>
+<div class="row">
+    <h4 class="text-center">
+        {{profile.full_name}}'s Profile Details
+    </h4>
+    <hr>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <center>
+                    <img src="{{profile.picture.url}}" alt="profile-image" class="profile_img img-fluid">
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <p class="mt-3"><strong>Name: </strong>{{profile.full_name}}</p>
+                <p><strong>Email: </strong>{{user.email}}</p>
+                <p><strong>Balance: </strong>${{profile.dollar_balance|intcomma}}</p>
+                <p><strong>Created On: </strong>{{profile.date_created}}</p>
+                <div class="p_btns">
+                    <a href="{% url 'myadmin:edit_user' user.pk %}" class="btn btn-info w-100 mt-2 fw-bold text-white">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <p class="mt-3"><strong>Bitcoin Balance: </strong>{{user.balance.bitcoin}}</p>
+                <p><strong>Ethereum Balance: </strong>{{user.balance.etheriun}}</p>
+                <p><strong>USDT Balance: </strong>${{user.balance.usdt}}</p>
+                <!-- <p><strong>Created On: </strong>{{profile.date_created}}</p>
+                <div class="p_btns">
+                    <a href="{% url 'myadmin:edit_user' user.pk %}" class="btn btn-info w-100 mt-2 fw-bold text-white">Edit Profile</a>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row mt-4">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                          <tr>
+                            <th scope="col">Bank</th>
+                            <th scope="col">Account Name</th>
+                            <th scope="col">Account Number</th>
+                            <th scope="col">Swift/Iban</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for bank in bank_account %}
+                          <tr>
+                            <td>{{bank.bank}}</td>
+                            <td>{{bank.holder_name}}</td>
+                            <td>{{bank.account_number}}</td>
+                            <td>{{bank.swift_iban}}</td>
+                            <td>{% if bank.is_main%}No 60 Days{%else%}Yes 60 Days{% endif %}</td>
+                            <td><a href="{% url 'myadmin:edit_user' user.pk %}" class="btn-table btn btn-info btn-small w-100 fw-bold text-white">Edit</a></td>
+                           
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
