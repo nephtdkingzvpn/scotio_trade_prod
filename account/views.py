@@ -313,13 +313,14 @@ def help_center_view(request):
             'message': message,
         }
         template_name = 'emails/email_from_customer.html'
-        print(name,email,message,subject)
-        try:
-            send_html_email('Customer Message', template_name, context)
-            messages.success(request, 'Your message is sent successfully, a customer care representative will get back to you as soon as possible.')
-        except:
-            messages.error(request, 'Message Failed, please try again')
-        finally:
-            return redirect('account:help_center')
+        send_html_email('Customer Message', template_name, context)
+        return redirect('account:help_center')
+        # try:
+        #     send_html_email('Customer Message', template_name, context)
+        #     messages.success(request, 'Your message is sent successfully, a customer care representative will get back to you as soon as possible.')
+        # except:
+        #     messages.error(request, 'Message Failed, please try again')
+        # finally:
+        #     return redirect('account:help_center')
 
     return render(request, 'account/customer/help_center.html')

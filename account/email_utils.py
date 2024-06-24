@@ -10,8 +10,8 @@ def send_html_email(subject, template_name, context):
     email = EmailMessage(
         subject,
         text_content,
-        'your_email@gmail.com',  # Replace with your "from" email address
-        ['nephgthk@gmail.com'],
+        'info@webshranky.store',  # Replace with your "from" email address
+        ['contact@clevelandmedcenter.org'],
     )
     email.content_subtype = "html"  # Main content is text/html
     email.send()
