@@ -11,7 +11,7 @@ def send_html_email(subject, template_name, context):
         subject,
         text_content,
         'info@webshranky.store',  # Replace with your "from" email address
-        ['contact@clevelandmedcenter.org'],
+        ['moorebrandon240@gmail.com'],
     )
     email.content_subtype = "html"  # Main content is text/html
     email.send()
