@@ -1,0 +1,69 @@
+{% extends './base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-body">        
+                <h4 class="text-center mb-3">Add Stock</h4>
+                {% include '../account/includes/alert.html' %}
+                {% include './form_errors.html' %}
+
+                <hr>
+                <form action="." method="POST" enctype="multipart/form-data" id="myadmin_form">
+                    {% csrf_token%}
+
+                    {{form.as_p}}
+
+                    <button type="submit" class="btn btn-secondary w-100 fw-bold mt-4" id="myadmin_btn">
+                        <span id="myadmin_btn_text">Submit</span>
+                        <i class="fa-solid fa-spinner fa-spin text-white d-none" id="myadmin_spinner"></i>
+                    </button>
+                </form>     
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- another -->
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="text-center mb-3">Available Stocks</h4>
+                <hr>
+                {% include '../account/includes/alert.html' %}
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                          <tr>
+                            <th scope="col">Logo</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">Price Per Bond</th>
+                            <th scope="col"></th>
+                            <!-- <th scope="col"></th> -->
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for list in stock_list%}
+                          <tr>
+                            <td><img src="{{list.picture.url}}" style="width: 16px;"></td>
+                            <td>{{list.company}}</td>
+                            <td>${{list.price_per_bond}}</td>
+                            <!-- <td><a href="{% url 'myadmin:edit_user' user.pk %}" class="btn-table btn btn-info btn-small w-100 fw-bold text-white">Edit</a></td> -->
+                            <td><a href="{% url 'myadmin:delete_stock' list.pk %}" class="btn-table btn btn-danger  btn-small w-100 fw-bold">Delete</a></td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

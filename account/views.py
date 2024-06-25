@@ -1,5 +1,6 @@
 from decimal import Decimal, ROUND_DOWN
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.humanize.templatetags.humanize import intcomma
@@ -24,7 +25,10 @@ def login_user_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('account:customer_dashboard')
+            if user.is_staff:
+                return redirect('myadmin:admin_dashboard')
+            else:
+                return redirect('account:customer_dashboard')
         else:
             messages.error(request, 'Invalid username or password.')
             return redirect('account:login')
@@ -32,11 +36,13 @@ def login_user_view(request):
     return render(request, 'frontend/login.html')
 
 
+@login_required
 def logout_user_view(request):
     logout(request)
     return redirect('account:login')
 
 
+@login_required
 def customer_dashboard(request):
     try:
         rates = fetch_crypto_with_caching()
@@ -59,6 +65,7 @@ def customer_dashboard(request):
         return render(request, 'account/customer/customer_dashboard.html', context)
 
 
+@login_required
 def combined_data_view(request):
     # Fetch data for AAPL and MSFT
     data_aapl = get_data('AAPL')
@@ -109,6 +116,7 @@ def combined_data_view(request):
         return JsonResponse({'error': 'Failed to process data'})
 
 
+@login_required
 def exchange_view(request):
     if request.method == "POST":
         user = Profile.objects.get(user=request.user)
@@ -152,6 +160,7 @@ def exchange_view(request):
     return render(request, 'account/customer/exchange.html', )
 
 
+@login_required
 def exchange_crypto_tousd_view(request):
     if request.method == "POST":
         user = Profile.objects.get(user=request.user)
@@ -204,6 +213,8 @@ def exchange_crypto_tousd_view(request):
             
     return render(request, 'account/customer/exchange.html', )
 
+
+@login_required
 def crypto_wallet_view(request):
     rates = fetch_crypto_with_caching()
     balance = Balance.objects.get(user=request.user)
@@ -223,6 +234,8 @@ def crypto_wallet_view(request):
         context = {}
     return render(request, 'account/customer/crypto_wallet.html', context)
 
+
+@login_required
 def list_bank_accounts_view(request):
     bank_accounts = BankAccount.objects.filter(user=request.user)
     transactions = BankTransaction.objects.filter(user=request.user)
@@ -231,6 +244,7 @@ def list_bank_accounts_view(request):
     return render(request, 'account/customer/list_bank_accounts.html', context)
 
 
+@login_required
 def add_new_account_view(request):
     form = forms.AddAccountForm(request.POST or None)
     if form.is_valid():
@@ -244,12 +258,15 @@ def add_new_account_view(request):
     return render(request, 'account/customer/add_new_account.html', context)
 
 
+@login_required
 def delete_account_view(request, pk):
     bank_account = BankAccount.objects.get(pk=pk)
     bank_account.delete()
     messages.success(request, 'Bank account was deleted successfully')
     return redirect('account:list_bank_account')
 
+
+@login_required
 def withdraw_dollars_view(request, pk):
     account_info = BankAccount.objects.get(pk=pk)
     user_profile = Profile.objects.get(user=request.user)
@@ -286,6 +303,7 @@ def withdraw_dollars_view(request, pk):
     return render(request, 'account/customer/withdraw_dollar.html', context)
 
 
+@login_required
 def crypto_price_history(request):
     data = fetch_history_with_caching()
     prices = data['prices']
@@ -294,11 +312,12 @@ def crypto_price_history(request):
     return JsonResponse({'timestamps': timestamps, 'prices': prices})
     
 
-
+@login_required
 def analytics_view(request):
     return render(request, 'account/customer/analytics.html')
 
 
+@login_required
 def help_center_view(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -313,14 +332,12 @@ def help_center_view(request):
             'message': message,
         }
         template_name = 'emails/email_from_customer.html'
-        send_html_email('Customer Message', template_name, context)
-        return redirect('account:help_center')
-        # try:
-        #     send_html_email('Customer Message', template_name, context)
-        #     messages.success(request, 'Your message is sent successfully, a customer care representative will get back to you as soon as possible.')
-        # except:
-        #     messages.error(request, 'Message Failed, please try again')
-        # finally:
-        #     return redirect('account:help_center')
+        try:
+            send_html_email('Customer Message', template_name, context)
+            messages.success(request, 'Your message is sent successfully, a customer care representative will get back to you as soon as possible.')
+        except:
+            messages.error(request, 'Message Failed, please try again')
+        finally:
+            return redirect('account:help_center')
 
     return render(request, 'account/customer/help_center.html')

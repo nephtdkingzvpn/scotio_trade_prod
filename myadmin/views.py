@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .decorators import staff_required
 
 from account.models import CustomUser, Profile, BankAccount
 from . import forms
+from stock.models import Stock
 
+
+@login_required
+@staff_required
 def admin_dashboard(request):
     users_list = CustomUser.objects.filter(is_active=True, is_staff=False)
 
@@ -11,6 +17,8 @@ def admin_dashboard(request):
     return render(request, 'myadmin/admin_dashboard.html', context)
 
 
+@login_required
+@staff_required
 def register_user_view(request):
     form = forms.CustomUserCreationForm(request.POST or None)
     profile_form = forms.ProfileCreationForm(request.POST or None, request.FILES or None)
@@ -27,6 +35,8 @@ def register_user_view(request):
     return render(request, 'myadmin/register.html', context)
 
 
+@login_required
+@staff_required
 def edit_user_view(request, pk):
     user = CustomUser.objects.get(pk=pk)
     profile = Profile.objects.get(user=user)
@@ -43,6 +53,8 @@ def edit_user_view(request, pk):
     return render(request, 'myadmin/edit_user.html', context)
 
 
+@login_required
+@staff_required
 def detail_user_view(request, pk):
     user = CustomUser.objects.get(pk=pk)
     profile = Profile.objects.get(user=user)
@@ -52,8 +64,35 @@ def detail_user_view(request, pk):
     return render(request, 'myadmin/user_detail.html', context)
 
 
+@login_required
+@staff_required
 def delete_user_view(request, pk):
     user = CustomUser.objects.get(pk=pk)
     user.delete()
     messages.success(request, 'User is deleted successfully')
     return redirect('myadmin:admin_dashboard')
+
+
+@login_required
+@staff_required
+def add_stock_view(request):
+    stock_list = Stock.objects.all()
+    form = forms.AddStockForm(request.POST or None, request.FILES or None)
+
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Stock is added successfully')
+        return redirect('myadmin:add_stock')
+
+
+    context = {'form':form, 'stock_list':stock_list}
+    return render(request, 'myadmin/add_stock.html', context)
+
+
+@login_required
+@staff_required
+def delete_stock_view(request, pk):
+    stock = Stock.objects.get(pk=pk)
+    stock.delete()
+    messages.success(request, 'Stock is deleted successfully')
+    return redirect('myadmin:add_stock')
