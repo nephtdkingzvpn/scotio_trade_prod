@@ -6,13 +6,13 @@
 {% block content %}
 <style>
     .profile_img{
-        width: 200px; 
-        height: 200px; 
+        width: 100px; 
+        height: 100px; 
         object-fit: cover;
         border-radius: 50%;
     }
     p{
-        font-size: 16px;
+        font-size: 13px;
         margin: 0;
         margin-bottom: 10px;
     }
@@ -22,47 +22,31 @@
         {{profile.full_name}}'s Profile Details
     </h4>
     <hr>
-    <div class="col-md-4">
+    <div class="col-md-2">
         <div class="card">
             <div class="card-body">
                 <center>
                     <img src="{{profile.picture.url}}" alt="profile-image" class="profile_img img-fluid">
                 </center>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
                 <p class="mt-3"><strong>Name: </strong>{{profile.full_name}}</p>
-                <p><strong>Email: </strong>{{user.email}}</p>
-                <p><strong>Balance: </strong>${{profile.dollar_balance|intcomma}}</p>
-                <p><strong>Created On: </strong>{{profile.date_created}}</p>
-                <div class="p_btns">
-                    <a href="{% url 'myadmin:edit_user' user.pk %}" class="btn btn-info w-100 mt-2 fw-bold text-white">Edit Profile</a>
-                </div>
+                <p class=""><strong>Email: </strong>{{user.email}}</p>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-2">
         <div class="card">
             <div class="card-body">
                 <p class="mt-3"><strong>Bitcoin Balance: </strong>{{user.balance.bitcoin}}</p>
                 <p><strong>Ethereum Balance: </strong>{{user.balance.etheriun}}</p>
                 <p><strong>USDT Balance: </strong>${{user.balance.usdt}}</p>
-                <!-- <p><strong>Created On: </strong>{{profile.date_created}}</p>
-                <div class="p_btns">
-                    <a href="{% url 'myadmin:edit_user' user.pk %}" class="btn btn-info w-100 mt-2 fw-bold text-white">Edit Profile</a>
-                </div> -->
+                <p><strong>Balance: </strong>${{profile.dollar_balance|intcomma}}</p>
             </div>
         </div>
     </div>
-</div>
-<hr>
-<div class="row mt-4">
-    <div class="col-md-7">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-body">
+
                 <div class="table-responsive">
                     <table class="table table-condensed">
                         <thead>
@@ -71,7 +55,7 @@
                             <th scope="col">Account Name</th>
                             <th scope="col">Account Number</th>
                             <th scope="col">Swift/Iban</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">60 Days</th>
                             <th scope="col"></th>
                           </tr>
                         </thead>
@@ -82,7 +66,7 @@
                             <td>{{bank.holder_name}}</td>
                             <td>{{bank.account_number}}</td>
                             <td>{{bank.swift_iban}}</td>
-                            <td>{% if bank.is_main%}No 60 Days{%else%}Yes 60 Days{% endif %}</td>
+                            <td>{% if bank.is_main%}No{%else%}Yes{% endif %}</td>
                             <td><a href="{% url 'myadmin:edit_user' user.pk %}" class="btn-table btn btn-info btn-small w-100 fw-bold text-white">Edit</a></td>
                            
                           </tr>
@@ -90,8 +74,62 @@
                         </tbody>
                     </table>
                 </div>
+                
             </div>
         </div>
     </div>
 </div>
+<hr>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header">
+                    <h3 class="text-center text-muted">
+                        {{profile.full_name}}'s purchased stock
+                    </h3>
+                </div>
+                {% include '../account/includes/alert.html' %}
+                <hr>
+                
+                <div class="table-responsive table-condensed">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Logo</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">Bonds</th>
+                            <th scope="col">Bought</th>
+                            <th scope="col">Expecting</th>
+                            <th scope="col">Live</th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for stock in user_stocks %}
+                          <tr>
+                            <td>{{stock.date_created}}</td>
+                            <td><img src="{{stock.stock.picture.url}}" style="width: 16px;"></td>
+                            <td>{{stock.stock.company}}</td>
+                            <td class="text-muted">{{stock.get_number_of_bonds}} Bonds</td>
+                            <td>${{stock.amount|intcomma}}</td>
+                            <td>${{stock.get_live_profit|intcomma}}</td>
+                            <td class="fw-bold text-{% if stock.is_profit and stock.percent_live >= 0.98 %}success{% else%}danger{% endif %}">{{stock.percent_live}}%</td>
+                            <!-- <td><a href="" class="table-btn w-100">Sell</a></td> -->
+                            <td>
+                                <a href="{% url 'myadmin:edit_use_buy_stock' stock.pk%}" class="btn btn-info w-100 text-white fw-bold">Edit</a>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

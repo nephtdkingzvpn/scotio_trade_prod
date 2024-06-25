@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from account.models import CustomUser, Profile
-from stock.models import Stock
+from stock.models import Stock, BuyStock
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -64,5 +64,25 @@ class AddStockForm(forms.ModelForm):
 
         for field_name, field in self.fields.items():
             field.widget.attrs.update({
-                'class': 'form-control',
+                'class': 'form-control form-check-input',
             })
+
+
+class EditUserBuyStockForm(forms.ModelForm):
+    class Meta:
+        model = BuyStock
+        fields = '__all__'
+        exclude = ['is_active', 'user']
+        widgets = {
+            'is_profit': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+
+    def __init__(self, *args, **kwargs):
+        super(EditUserBuyStockForm, self).__init__(*args, **kwargs)
+
+        exclude_fields = ['is_profit']
+
+        for field_name, field in self.fields.items():
+            if field_name not in exclude_fields:
+                field.widget.attrs.update({'class': 'form-control'})

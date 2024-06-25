@@ -11,4 +11,5 @@ urlpatterns = [
     path('admin/detail/<pk>/customer/', views.detail_user_view, name='detail_user'),
     path('admin/stock/add/', views.add_stock_view, name='add_stock'),
     path('admin/stock/<pk>/delete/', views.delete_stock_view, name='delete_stock'),
+    path('admin/<pk>/edit/', views.edit_use_buy_stock_view, name='edit_use_buy_stock'),
 ]

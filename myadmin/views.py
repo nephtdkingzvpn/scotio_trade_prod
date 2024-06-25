@@ -5,7 +5,7 @@ from .decorators import staff_required
 
 from account.models import CustomUser, Profile, BankAccount
 from . import forms
-from stock.models import Stock
+from stock.models import Stock, BuyStock
 
 
 @login_required
@@ -59,8 +59,10 @@ def detail_user_view(request, pk):
     user = CustomUser.objects.get(pk=pk)
     profile = Profile.objects.get(user=user)
     bank_account = BankAccount.objects.filter(user=user)
+    user_stocks = BuyStock.objects.filter(user=user)
 
-    context = {'user':user, 'profile':profile, 'bank_account':bank_account}
+    context = {'user':user, 'profile':profile, 'bank_account':bank_account,
+            'user_stocks':user_stocks}
     return render(request, 'myadmin/user_detail.html', context)
 
 
@@ -96,3 +98,15 @@ def delete_stock_view(request, pk):
     stock.delete()
     messages.success(request, 'Stock is deleted successfully')
     return redirect('myadmin:add_stock')
+
+
+def edit_use_buy_stock_view(request, pk):
+    user_stock = BuyStock.objects.get(pk=pk)
+    form = forms.EditUserBuyStockForm(request.POST or None, instance=user_stock)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Purchased Stock is updated successfully')
+        return redirect('myadmin:detail_user', pk=user_stock.user.pk)
+
+    context = {'form':form}
+    return render(request, 'myadmin/edit_user_buystock.html', context)
