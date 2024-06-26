@@ -142,7 +142,9 @@
         </div>
         <div class="col-6">
             <p class="small">Withdraw Crypto Currency.</p>
-            <a data-bs-toggle="modal" data-bs-target="#withdraw_btc" class="btn w-100">Withdraw</a>
+            <a 
+            href="{% url 'account:withdraw_crypto' %}" class="btn w-100">Withdraw</a>
+            <!-- <a data-bs-toggle="modal" data-bs-target="#withdraw_btc" class="btn w-100">Withdraw</a> -->
         </div>
     </div>
 </div>

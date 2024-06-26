@@ -1,0 +1,153 @@
+{% extends '../base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+
+<style>
+    .modal-content{
+        max-width: 400px;
+        width: 100%;
+    }
+</style>
+
+<hr class="mb-0">
+<div class="container-fluid">
+    <div class="row p-2 mx-1" >
+        <div class="col-3">
+            <p class="small">Total Balance (USD)</p>
+            <h4>${{request.user.profile.dollar_balance|intcomma}}</h4>
+        </div>
+        <div class="col-3">
+            <p class="small">Total Balance (BITCOIN)</p>
+            <h4>{{request.user.balance.bitcoin}}</h4>
+        </div>
+        <div class="col-3">
+            <p class="small">Total Balance (ETH)</p>
+            <h4>{{request.user.balance.etheriun}}</h4>
+        </div>
+        <div class="col-3">
+            <p class="small">Total Balance (USDT)</p>
+            <h4>${{request.user.balance.usdt|intcomma}}</h4>
+        </div>
+    </div>
+</div>
+<hr class="my-0">
+<div class="container">
+    <div class="row justify-content-center align-items-center mt-4">
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center">
+                        Withdraw
+                    </h5>
+                    <hr>
+                    <form action="" id="withdraw-form">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="select-coin" class="form-label">Select Coin</label>
+                            <select class="form-select" id="select-coin">
+                                {% for crypto, rate in rates.items %}
+                                    <option value="{{ crypto }}">
+                                        {% if crypto == 'tetherusdt' %}
+                                            tether(usdt)
+                                        {% else %}
+                                            {{ crypto }}
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="select-coin" class="form-label">Choose Network</label>
+                            <select class="form-select" id="select-network">
+                                <option value="Bitcoin">Bitcoin</option>
+                                <option value="SegWit" selected>BTC(SegWit)</option>
+                                <option value="Lightning">Lightning Network</option>
+                                <option value="BEP20">BNB Smart Chain (BEP20)</option>
+                                <option value="ERC20">Ethereum (ERC20)</option>
+                                <option value="BEP2">BNB Beacon (BEP2)</option>
+                              </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="wallet_ad" class="form-label">Wallet Address</label>
+                            <input type="text" class="form-control" id="wallet_ad" placeholder="">
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Amount in $</label>
+                            <input type="number" class="form-control" id="amount" placeholder="1000">
+                        </div>
+                        <div class="mb-3">
+                            <label for="crypto" class="form-label">Amount in crypto - (readonly)</label>
+                            <input type="text" class="form-control" id="crypto" readonly>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                            <button type="button" class="btn btn-secondary w-100">Withdraw</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    const form = document.querySelector('#withdraw-form')
+
+
+    var typingTimer; // Timer identifier
+    var doneTypingInterval = 1000; // Time in milliseconds (1 second)
+
+    // Function to handle input change
+    function handleInputChange() {
+        clearTimeout(typingTimer); // Clear the previous timer
+
+        typingTimer = setTimeout(convertToCrypto, doneTypingInterval);
+    }
+
+    // Function to convert USD to Crypto
+    function convertToCrypto() {
+        // Get the input elements
+        var dollarInput = document.getElementById('amount');
+        var cryptoInput = document.getElementById('crypto');
+        var selectedCrypto = document.getElementById('select-coin').value;
+
+        var rates = {
+            {% for crypto, rate in rates.items %}
+                {% if crypto == 'tetherusdt' %}
+                    'tetherusdt': {{ rate }},
+                {% else %}
+                    '{{ crypto }}': {{ rate }},
+                {% endif %}
+            {% endfor %}
+        };
+
+        var cryptoRate = parseFloat(rates[selectedCrypto]); // Get the rate for the selected cryptocurrency
+
+        // Get the value entered in dollars
+        var dollarAmount = parseFloat(dollarInput.value);
+
+        // Assume 1 USD = 0.001 BTC for simplicity (replace with actual conversion rate)
+        var cryptoAmount = dollarAmount / cryptoRate; // Conversion rate example (modify as needed)
+
+        // Update the crypto input field with the calculated amount
+        cryptoInput.value = cryptoAmount.toFixed(9); // Adjust decimal places as needed
+    }
+
+    // Attach event listener to dollarAmount input for 'input' event
+    var dollarInput = document.getElementById('amount');
+    dollarInput.addEventListener('input', handleInputChange);
+
+    function submitDataToDjango(){
+        var formData = new FormData(form);
+    }
+</script>
+
+{% endblock %}

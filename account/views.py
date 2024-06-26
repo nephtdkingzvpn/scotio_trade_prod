@@ -15,6 +15,7 @@ from .fetch_chistory import fetch_history_with_caching
 from .models import BankAccount, Profile, BankTransaction, Balance
 from . import forms
 from .email_utils import send_html_email
+from crypto.models import ExchangeTrade
 
 
 def login_user_view(request):
@@ -188,6 +189,7 @@ def exchange_crypto_tousd_view(request):
                             messages.error(request, m_message)
                             return redirect('account:exchange_view')
                         balance.bitcoin = round(balance.bitcoin - float(c_crypto), 9)
+
                     elif selected_option == 'ethereum':
                         if c_crypto > balance.etheriun:
                             messages.error(request, m_message)
@@ -198,7 +200,7 @@ def exchange_crypto_tousd_view(request):
                             messages.error(request, m_message)
                             return redirect('account:exchange_view')
                         balance.usdt -= c_crypto
-
+                    
                     balance.save()
                     user.dollar_balance += Decimal(amount)
                     user.save()
@@ -341,3 +343,17 @@ def help_center_view(request):
             return redirect('account:help_center')
 
     return render(request, 'account/customer/help_center.html')
+
+
+def withdraw_crypto_view(request):
+    rates = fetch_crypto_with_caching() #this functions fecthes the rate
+
+    # Rename the key 'tether' to 'tetherusdt'
+    try:
+        rates['tetherusdt'] = rates.pop('tether')
+    except KeyError:
+        rates['tetherusdt'] = rates.pop('tetherusdt')
+    print(rates)
+
+    context = {'rates':rates}
+    return render(request, 'account/customer/withdraw_crypto.html', context)

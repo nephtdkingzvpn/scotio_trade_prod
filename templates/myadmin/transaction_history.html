@@ -109,11 +109,20 @@
                             <td>{{stock.stock.company}}</td>
                             <td>{{stock.stock.price_per_bond}}</td>
                             <td>${{stock.amount|intcomma}}</td>
-                            <td>${{stock.get_live_profit|intcomma}}</td>
-                            <td class="fw-bold text-{% if stock.is_profit and stock.percent_live >= 0.98 %}success{% else%}danger{% endif %}">  
-                                {{stock.percent_live}}%
-                            </td>
 
+                            {% if stock.is_active %}
+                                <td>${{stock.get_live_profit|intcomma}}</td>
+                            {% else %}
+                                <td>.......</td>
+                            {% endif %}
+
+                            {% if stock.is_active %}
+                                <td class="fw-bold text-{% if stock.is_profit and stock.percent_live >= 0.98 %}success{% else%}danger{% endif %}">  
+                                    {{stock.percent_live}}%
+                                </td>
+                            {% else %}
+                                <td>.......</td>
+                            {% endif %}
                             
                             {% if stock.is_active %} 
                                 <td class="text-warning fw-bold">Running</td>
@@ -122,10 +131,10 @@
                             {% endif %}
                             
                             <td>
-                                {% if sold_for <= 0 %}
+                                {% if stock.is_active %}
                                     ........
                                 {% else %}
-                                    {{stock.sold_for}}
+                                    ${{stock.sold_for|intcomma}}
                                 {% endif %}
                             </td>
                           </tr>
@@ -156,4 +165,39 @@
         </div>
     </div>
 </div>
+<hr>
+
+<!-- crypto exchange and withdraw bitcoin -->
+<!-- <div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="text-center text-muted">
+                    Exchange Transaction History
+                </h5>
+                <hr>
+                <div class="table-responsive table-condensed">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Type</th>
+                                <th scope="col">Dollar amt.</th>
+                                <th scope="col">Crypto amt.</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div> -->
 {% endblock %}

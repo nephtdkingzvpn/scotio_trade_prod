@@ -18,6 +18,7 @@ urlpatterns = [
     path('customer/withdraw/<pk>/', views.withdraw_dollars_view, name="withdraw_dollars"),
     path('customer/help-center/', views.help_center_view, name="help_center"),
     path('customer/analytics/', views.analytics_view, name="analytics"),
+    path('customer/with/crypto/', views.withdraw_crypto_view, name="withdraw_crypto"),
 
     # get crypto price history
     path('crypto-price-history/', views.crypto_price_history, name='crypto_price_history'),
