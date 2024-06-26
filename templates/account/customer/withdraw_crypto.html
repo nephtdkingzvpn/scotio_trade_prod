@@ -7,29 +7,41 @@
 {% block content %}
 
 <style>
-    .modal-content{
-        max-width: 400px;
+    .wid_card{
+        position: relative;
+    }
+    .process_payment{
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
+        height: 100%;
+        background: #18275a;
+        z-index: 1;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        color: #fff !important;
     }
 </style>
 
 <hr class="mb-0">
 <div class="container-fluid">
     <div class="row p-2 mx-1" >
-        <div class="col-3">
-            <p class="small">Total Balance (USD)</p>
+        <div class="col-6 col-sm-4 col-md-3 mb-2 mb-md-0">
+            <p class="small">Balance (USD)</p>
             <h4>${{request.user.profile.dollar_balance|intcomma}}</h4>
         </div>
-        <div class="col-3">
-            <p class="small">Total Balance (BITCOIN)</p>
+        <div class="col-6 col-sm-4 col-md-3 mb-2 mb-md-0">
+            <p class="small">Balance (BITCOIN)</p>
             <h4>{{request.user.balance.bitcoin}}</h4>
         </div>
-        <div class="col-3">
-            <p class="small">Total Balance (ETH)</p>
+        <div class="col-6 col-sm-4 col-md-3">
+            <p class="small">Balance (ETH)</p>
             <h4>{{request.user.balance.etheriun}}</h4>
         </div>
-        <div class="col-3">
-            <p class="small">Total Balance (USDT)</p>
+        <div class="col-6 col-sm-4 col-md-3">
+            <p class="small">Balance (USDT)</p>
             <h4>${{request.user.balance.usdt|intcomma}}</h4>
         </div>
     </div>
@@ -38,18 +50,37 @@
 <div class="container">
     <div class="row justify-content-center align-items-center mt-4">
         <div class="col-md-7">
-            <div class="card">
+            <div class="card wid_card">
+                <div class="process_payment" id="process_payment">
+                    <div class="initial" id="initial">
+                        <div class="spinner-border ms-5" style="width: 4rem; height: 4rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="spinner_talk fw-bold mt-2 text-center">Initializing........... <span id="spinner_percent">0%</span></p>
+                    </div>
+                    <div class="processing" style="display: none;">
+                        <div class="spinner-grow" style="width: 5rem; height: 5rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="spinner_talk fw-bold mt-2 text-center">Processing..</p>
+                    </div>
+                    <div class="completed" style="display: none;">
+                        <i class="fa-regular fa-circle-check ms-5" style="font-size: 74px; color: rgb(255, 255, 255);"></i>
+                        <p class="spinner_talk fw-bold mt-2 text-center">Completed successfully</p>
+                        <a href="{% url 'account:crypto_wallet_view' %}" class="btn w-100">Finish</a>
+                    </div>
+                </div>
                 <div class="card-body">
                     <h5 class="text-center">
                         Withdraw
                     </h5>
                     <hr>
-                    <form action="" id="withdraw-form">
+                    <form action="" id="withdraw-form" method="POST">
                         {% csrf_token %}
 
                         <div class="mb-3">
                             <label for="select-coin" class="form-label">Select Coin</label>
-                            <select class="form-select" id="select-coin">
+                            <select class="form-select" name="select-coin" id="select-coin">
                                 {% for crypto, rate in rates.items %}
                                     <option value="{{ crypto }}">
                                         {% if crypto == 'tetherusdt' %}
@@ -64,7 +95,7 @@
 
                         <div class="mb-3">
                             <label for="select-coin" class="form-label">Choose Network</label>
-                            <select class="form-select" id="select-network">
+                            <select class="form-select" name="select-network" id="select-network">
                                 <option value="Bitcoin">Bitcoin</option>
                                 <option value="SegWit" selected>BTC(SegWit)</option>
                                 <option value="Lightning">Lightning Network</option>
@@ -75,19 +106,19 @@
                         </div>
                         <div class="mb-3">
                             <label for="wallet_ad" class="form-label">Wallet Address</label>
-                            <input type="text" class="form-control" id="wallet_ad" placeholder="">
+                            <input type="text" name="wallet_id" class="form-control" id="wallet_ad" placeholder="">
                         </div>
                         <div class="mb-3">
                             <label for="amount" class="form-label">Amount in $</label>
-                            <input type="number" class="form-control" id="amount" placeholder="1000">
+                            <input type="number" name="amount" class="form-control" id="amount" placeholder="1000">
                         </div>
                         <div class="mb-3">
                             <label for="crypto" class="form-label">Amount in crypto - (readonly)</label>
-                            <input type="text" class="form-control" id="crypto" readonly>
+                            <input type="text" name="crypto" class="form-control" id="crypto" readonly>
                         </div>
                         <div class="modal-footer">
                             <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                            <button type="button" class="btn btn-secondary w-100">Withdraw</button>
+                            <button type="submit" class="btn btn-secondary w-100">Withdraw</button>
                         </div>
                     </form>
                 </div>
@@ -100,10 +131,19 @@
 
 <script>
     const form = document.querySelector('#withdraw-form')
+    let spinner = document.getElementById('process_payment');
+    let initialSpin = document.querySelector('#initial')
+    let processSpin = document.querySelector('.processing')
+    let completedSpin = document.querySelector('.completed')
+
+    form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            startFetching(); 
+        });
 
 
     var typingTimer; // Timer identifier
-    var doneTypingInterval = 1000; // Time in milliseconds (1 second)
+    var doneTypingInterval = 500; // Time in milliseconds (1 second)
 
     // Function to handle input change
     function handleInputChange() {
@@ -147,7 +187,53 @@
 
     function submitDataToDjango(){
         var formData = new FormData(form);
+        initialSpin.style.display = 'none';
+        processSpin.style.display = 'block';
+
+        fetch("{% url 'account:withdraw_crypto' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(formData)) 
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                processSpin.style.display = 'none';
+                completedSpin.style.display = 'block';
+                form.reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle error response as needed
+            });
     }
+
+    // Function to show spinner and start fetching data
+    function startFetching() {
+        spinner.style.display = 'flex';
+        
+
+        var counterElement = document.getElementById('spinner_percent');
+        var count = 1;
+        var interval = setInterval(function() {
+            counterElement.textContent = count + '%';
+            count++;
+            if (count > 100) {
+                clearInterval(interval);
+                submitDataToDjango(); 
+            }
+        }, 100); 
+    }
+
+    
 </script>
 
 {% endblock %}

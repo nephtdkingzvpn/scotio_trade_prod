@@ -7,6 +7,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.http import JsonResponse
 import datetime
 import requests
+import json
 
 # my imports
 from .get_aapl_data import (get_data, convert_crypto_to_usd, convert_usd_to_crypto)
@@ -345,6 +346,7 @@ def help_center_view(request):
     return render(request, 'account/customer/help_center.html')
 
 
+@login_required
 def withdraw_crypto_view(request):
     rates = fetch_crypto_with_caching() #this functions fecthes the rate
 
@@ -353,7 +355,26 @@ def withdraw_crypto_view(request):
         rates['tetherusdt'] = rates.pop('tether')
     except KeyError:
         rates['tetherusdt'] = rates.pop('tetherusdt')
-    print(rates)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            dollar_amount = data.get('amount')
+            crypto_select = data.get('select-coin')
+            network_select = data.get('select-network')
+            crypto_amount = data.get('crypto')
+            # print(dollar_amount)
+            # print(crypto_amount)
+            # print(crypto_select)
+            # print(network_select)
+
+            response_data = {
+                'message': 'Data received successfully',
+            }
+            return JsonResponse(response_data)
+        except json.JSONDecodeError as e:
+            # Handle JSON decoding error
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
 
     context = {'rates':rates}
     return render(request, 'account/customer/withdraw_crypto.html', context)
