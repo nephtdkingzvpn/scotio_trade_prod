@@ -46,7 +46,13 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-body">
-
+                <div class="header">
+                    <h3 class="text-center text-muted">
+                        {{profile.full_name}}'s added bank accounts
+                    </h3>
+                </div>
+                {% include '../account/includes/alert.html' %}
+                <hr>
                 <div class="table-responsive">
                     <table class="table table-condensed">
                         <thead>
@@ -55,7 +61,7 @@
                             <th scope="col">Account Name</th>
                             <th scope="col">Account Number</th>
                             <th scope="col">Swift/Iban</th>
-                            <th scope="col">60 Days</th>
+                            <th scope="col">60 Days?</th>
                             <th scope="col"></th>
                           </tr>
                         </thead>
@@ -67,12 +73,31 @@
                             <td>{{bank.account_number}}</td>
                             <td>{{bank.swift_iban}}</td>
                             <td>{% if bank.is_main%}No{%else%}Yes{% endif %}</td>
-                            <td><a href="{% url 'myadmin:edit_user' user.pk %}" class="btn-table btn btn-info btn-small w-100 fw-bold text-white">Edit</a></td>
+                            <td><a href="{% url 'myadmin:edit_user_bank_account' bank.pk %}" class="btn-table btn btn-info btn-small w-100 fw-bold text-white">Edit</a></td>
                            
                           </tr>
                         {% endfor %}
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Pagination links -->
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if bank_account.has_previous %}
+                            <a href="?page=1">&laquo; First</a>
+                            <a href="?page={{ bank_account.previous_page_number }}">Previous</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Page {{ bank_account.number }} of {{ bank_account.paginator.num_pages }}.
+                        </span>
+
+                        {% if bank_account.has_next %}
+                            <a href="?page={{ bank_account.next_page_number }}">Next</a>
+                            <a href="?page={{ bank_account.paginator.num_pages }}">Last &raquo;</a>
+                        {% endif %}
+                    </span>
                 </div>
                 
             </div>

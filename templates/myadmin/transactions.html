@@ -8,7 +8,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="text-center mb-3">Active Users List</h4>
+                <h4 class="text-center mb-3">View Transaction History by each User</h4>
                 <hr>
                 {% include '../account/includes/alert.html' %}
                 <div class="table-responsive">
@@ -23,8 +23,7 @@
                             <th scope="col">USDT</th>
                             <th scope="col">Date Created</th>
                             <th scope="col"></th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
+
                           </tr>
                         </thead>
                         <tbody>
@@ -37,9 +36,7 @@
                             <td>{{user.balance.etheriun}}</td>
                             <td>{{user.balance.usdt}}</td>
                             <td>${{user.profile.date_created}}</td>
-                            <td><a href="{% url 'myadmin:detail_user' user.pk %}" class="btn-table btn btn-primary btn-small w-100 fw-bold text-white">More Details</a></td>
-                            <td><a href="{% url 'myadmin:edit_user' user.pk %}" class="btn-table btn btn-info btn-small w-100 fw-bold text-white">Edit</a></td>
-                            <td><a href="{% url 'myadmin:delete_user' user.pk %}" class="btn-table btn btn-danger  btn-small w-100 fw-bold">Delete</a></td>
+                            <td><a href="{% url 'myadmin:transaction_history_detail' user.pk %}" class="btn-table btn btn-primary btn-small w-100 fw-bold text-white">View Transaction History</a></td>
                           </tr>
                         {% endfor %}
                         </tbody>

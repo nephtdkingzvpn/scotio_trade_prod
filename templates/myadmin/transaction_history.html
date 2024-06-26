@@ -1,0 +1,159 @@
+{% extends './base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+
+<!-- dollar withdraw -->
+<div class="row">
+    <h3 class="text-center mb-3">
+        Transaction History For {{user.profile.full_name}}
+    </h3>
+    <hr>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="text-center text-muted">
+                    Dollar Withdrawer History
+                </h5>
+                <hr>
+                
+                <div class="table-responsive table-condensed">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <!-- <th scope="col">Customer</th> -->
+                            <th scope="col">Bank</th>
+                            <th scope="col">Account Holder</th>
+                            <th scope="col">Account Number</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Date</th>
+                            <!-- <th scope="col">Transaction ID</th> -->
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in dollar_withdraws %}
+                          <tr>
+                            <!-- <td>{{transaction.user.profile.full_name}}</td> -->
+                            <td>{{transaction.bank}}</td>
+                            <td>{{transaction.holder_name}}</td>
+                            <td>{{transaction.account_number}}</td>
+                            <td>${{transaction.amount|intcomma}}</td>
+                            <td>{{transaction.date_created}}</td>
+                            <!-- <td>
+                                {{transaction.ref}}
+                            </td> -->
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+
+                <!-- Pagination links -->
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if dollar_withdraws.has_previous %}
+                            <a href="?page=1">&laquo; First</a>
+                            <a href="?page={{ dollar_withdraws.previous_page_number }}">Previous</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Page {{ dollar_withdraws.number }} of {{ dollar_withdraws.paginator.num_pages }}.
+                        </span>
+
+                        {% if dollar_withdraws.has_next %}
+                            <a href="?page={{ dollar_withdraws.next_page_number }}">Next</a>
+                            <a href="?page={{ dollar_withdraws.paginator.num_pages }}">Last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+<!-- stock buy/sell -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="text-center text-muted">
+                    Stock Transaction History
+                </h5>
+                <hr>
+                
+                <div class="table-responsive table-condensed">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <!-- <th scope="col">Customer</th> -->
+                            <th scope="col">Date</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">Price per bond</th>
+                            <th scope="col">Amount Bought</th>
+                            <th scope="col">Expecting</th>
+                            <th scope="col">Live</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Sold For</th>
+
+                            <!-- <th scope="col">Transaction ID</th> -->
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for stock in stock_trans %}
+                          <tr>
+                            <!-- <td>{{stock.user.profile.full_name}}</td> -->
+                            <td>{{stock.date_created}}</td>
+                            <td>{{stock.stock.company}}</td>
+                            <td>{{stock.stock.price_per_bond}}</td>
+                            <td>${{stock.amount|intcomma}}</td>
+                            <td>${{stock.get_live_profit|intcomma}}</td>
+                            <td class="fw-bold text-{% if stock.is_profit and stock.percent_live >= 0.98 %}success{% else%}danger{% endif %}">  
+                                {{stock.percent_live}}%
+                            </td>
+
+                            
+                            {% if stock.is_active %} 
+                                <td class="text-warning fw-bold">Running</td>
+                            {% else %}
+                                <td class="text-primary fw-bold">Sold</td>
+                            {% endif %}
+                            
+                            <td>
+                                {% if sold_for <= 0 %}
+                                    ........
+                                {% else %}
+                                    {{stock.sold_for}}
+                                {% endif %}
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+
+                <!-- Pagination links -->
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if stock_trans.has_previous %}
+                            <a href="?page=1">&laquo; First</a>
+                            <a href="?page={{ stock_trans.previous_page_number }}">Previous</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Page {{ stock_trans.number }} of {{ stock_trans.paginator.num_pages }}.
+                        </span>
+
+                        {% if stock_trans.has_next %}
+                            <a href="?page={{ stock_trans.next_page_number }}">Next</a>
+                            <a href="?page={{ stock_trans.paginator.num_pages }}">Last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

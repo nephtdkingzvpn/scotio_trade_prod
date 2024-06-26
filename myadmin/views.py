@@ -3,9 +3,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import staff_required
 
-from account.models import CustomUser, Profile, BankAccount
+from account.models import CustomUser, Profile, BankAccount, BankTransaction
 from . import forms
 from stock.models import Stock, BuyStock
+from .pagination_utils import paginate_data
 
 
 @login_required
@@ -61,7 +62,9 @@ def detail_user_view(request, pk):
     bank_account = BankAccount.objects.filter(user=user)
     user_stocks = BuyStock.objects.filter(user=user)
 
-    context = {'user':user, 'profile':profile, 'bank_account':bank_account,
+    paginated_data = paginate_data(bank_account,2, request)
+
+    context = {'user':user, 'profile':profile, 'bank_account':paginated_data,
             'user_stocks':user_stocks}
     return render(request, 'myadmin/user_detail.html', context)
 
@@ -100,6 +103,8 @@ def delete_stock_view(request, pk):
     return redirect('myadmin:add_stock')
 
 
+@login_required
+@staff_required
 def edit_use_buy_stock_view(request, pk):
     user_stock = BuyStock.objects.get(pk=pk)
     form = forms.EditUserBuyStockForm(request.POST or None, instance=user_stock)
@@ -110,3 +115,50 @@ def edit_use_buy_stock_view(request, pk):
 
     context = {'form':form}
     return render(request, 'myadmin/edit_user_buystock.html', context)
+
+
+@login_required
+@staff_required
+def edit_user_bank_account_view(request, pk):
+    account = BankAccount.objects.get(pk=pk)
+    form = forms.EditBankaccountForm(request.POST or None, instance=account)
+
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'bank account updated successfully')
+        return redirect('myadmin:detail_user', pk=account.user.pk)
+
+    context = {'form':form, 'account':account}
+    return render(request, 'myadmin/edit_user_bank_account.html', context)
+
+
+def view_transactions_view(request):
+    users_list = CustomUser.objects.filter(is_active=True, is_staff=False)
+
+    context = {'users_list':users_list}
+    return render(request, 'myadmin/transactions.html', context)
+
+
+@login_required
+@staff_required
+def transaction_history_detail_view(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+
+    # getting dollar withdrawer
+    dollar_withdraws = BankTransaction.objects.filter(user=user)
+    dw_pagination = paginate_data(dollar_withdraws,10, request)
+
+    # getting stock
+    stock_trans = BuyStock.objects.filter(user=user)
+    st_pagination = paginate_data(stock_trans,10, request)
+
+    # profile = Profile.objects.get(user=user)
+    # bank_account = BankAccount.objects.filter(user=user)
+    # user_stocks = BuyStock.objects.filter(user=user)
+
+    # paginated_data = paginate_data(bank_account,2, request)
+
+    # context = {'user':user, 'profile':profile, 'bank_account':paginated_data,
+    #         'user_stocks':user_stocks}
+    context = {'user':user, 'dollar_withdraws':dw_pagination, 'stock_trans':st_pagination}
+    return render(request, 'myadmin/transaction_history.html', context)

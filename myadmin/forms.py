@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from account.models import CustomUser, Profile
+from account.models import CustomUser, Profile, BankAccount
 from stock.models import Stock, BuyStock
 
 
@@ -64,7 +64,7 @@ class AddStockForm(forms.ModelForm):
 
         for field_name, field in self.fields.items():
             field.widget.attrs.update({
-                'class': 'form-control form-check-input',
+                'class': 'form-control',
             })
 
 
@@ -86,3 +86,26 @@ class EditUserBuyStockForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             if field_name not in exclude_fields:
                 field.widget.attrs.update({'class': 'form-control'})
+
+
+class EditBankaccountForm(forms.ModelForm):
+    class Meta:
+        model = BankAccount
+        fields = '__all__'
+        exclude = ['user', 'amount']
+        labels = {
+            'is_main': 'No 60 Days Waiting',
+        }
+        widgets = {
+            'is_main': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super(EditBankaccountForm, self).__init__(*args, **kwargs)
+
+        exclude_fields = ['is_main']
+
+        for field_name, field in self.fields.items():
+            if field_name not in exclude_fields:
+                field.widget.attrs.update({'class': 'form-control'})
+

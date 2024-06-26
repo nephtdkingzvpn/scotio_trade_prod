@@ -24,6 +24,7 @@ class BuyStock(models.Model):
     is_profit = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     percent_live = models.FloatField(default=0.4)
+    sold_for = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

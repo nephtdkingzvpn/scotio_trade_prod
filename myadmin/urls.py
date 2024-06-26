@@ -12,4 +12,8 @@ urlpatterns = [
     path('admin/stock/add/', views.add_stock_view, name='add_stock'),
     path('admin/stock/<pk>/delete/', views.delete_stock_view, name='delete_stock'),
     path('admin/<pk>/edit/', views.edit_use_buy_stock_view, name='edit_use_buy_stock'),
+    path('admin/account/edit/<pk>/', views.edit_user_bank_account_view, name='edit_user_bank_account'),
+
+    path('admin/transactions/', views.view_transactions_view, name='view_transactions'),
+    path('admin/history/detail/<pk>/transaction/', views.transaction_history_detail_view, name='transaction_history_detail'),
 ]

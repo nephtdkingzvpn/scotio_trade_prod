@@ -45,6 +45,7 @@ def sell_stock_view(request):
         stock = BuyStock.objects.get(id=stock_id)
         user_profile = Profile.objects.get(user=request.user)
         stock.is_active = False
+        stock.sold_for = stock.get_live_profit()
         stock.save()
         user_profile.dollar_balance += stock.get_live_profit()
         user_profile.save()
