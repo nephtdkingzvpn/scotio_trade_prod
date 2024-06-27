@@ -1,5 +1,5 @@
 from decimal import Decimal
-from .models import Balance
+from account.models import Balance
 from django.http import JsonResponse
 
 def withdraw_crypto(user, crypto_type, crypto_amount):
@@ -8,18 +8,18 @@ def withdraw_crypto(user, crypto_type, crypto_amount):
 
         if crypto_type == 'bitcoin':
             if float(crypto_amount) > user_balance.bitcoin:
-                return JsonResponse({'insuff': 'insufficientbalance'})
+                return JsonResponse({'insuff': 'insufficientbalance', 'select_coin': crypto_type})
             user_balance.bitcoin -= float(crypto_amount)
 
         elif crypto_type == 'ethereum':
-            if float(crypto_amount) > user_balance.ethereum:
-                return JsonResponse({'insuff': 'insufficientbalance'})
-            user_balance.ethereum -= float(crypto_amount)
+            if float(crypto_amount) > user_balance.etheriun:
+                return JsonResponse({'insuff': 'insufficientbalance', 'select_coin': crypto_type})
+            user_balance.etheriun -= float(crypto_amount)
 
         elif crypto_type == 'tetherusdt':
-            if Decimal(crypto_amount) > user_balance.tetherusdt:
-                return JsonResponse({'insuff': 'insufficientbalance'})
-            user_balance.tetherusdt -= Decimal(crypto_amount)
+            if Decimal(crypto_amount) > user_balance.usdt:
+                return JsonResponse({'insuff': 'insufficientbalance', 'select_coin': crypto_type})
+            user_balance.usdt -= Decimal(crypto_amount)
 
         user_balance.save()
         return None  # Indicating successful withdrawal

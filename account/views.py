@@ -345,17 +345,16 @@ def help_center_view(request):
 
     return render(request, 'account/customer/help_center.html')
 
+from crypto.withdraw_utils import withdraw_crypto
 
 @login_required
 def withdraw_crypto_view(request):
-    rates = fetch_crypto_with_caching() 
-    user_balance = Balance.objects.get(user=request.user)
-
-    # Rename the key 'tether' to 'tetherusdt'
+    rates = fetch_crypto_with_caching()
     try:
         rates['tetherusdt'] = rates.pop('tether')
     except KeyError:
-        rates['tetherusdt'] = rates.pop('tetherusdt')
+        # rates['tetherusdt'] = rates.pop('tetherusdt')
+        pass
 
     if request.method == 'POST':
         try:
@@ -364,24 +363,10 @@ def withdraw_crypto_view(request):
             crypto_select = data.get('select-coin')
             network_select = data.get('select-network')
             crypto_amount = data.get('crypto')
-            
-            if crypto_select == 'bitcoin':
-                if float(crypto_amount) > user_balance.bitcoin:
-                    return JsonResponse({'insuff': 'insuficientbalance'})
-                user_balance.bitcoin -= float(crypto_amount)
-                user_balance.save()
 
-            elif crypto_select == 'ethereum':
-                if float(crypto_amount) > user_balance.etheriun:
-                    return JsonResponse({'insuff': 'insuficientbalance'})
-                user_balance.etheriun -= float(crypto_amount)
-                user_balance.save()
-
-            elif crypto_select == 'tetherusdt':
-                if Decimal(crypto_amount) > user_balance.ethereum:
-                    return JsonResponse({'insuff': 'insuficientbalance'})
-                user_balance.ethereum -= Decimal(crypto_amount)
-                user_balance.save()
+            error_response = withdraw_crypto(request.user, crypto_select, crypto_amount)
+            if error_response:
+                return error_response
 
             response_data = {
                 'message': 'Data received successfully',
@@ -391,5 +376,5 @@ def withdraw_crypto_view(request):
             # Handle JSON decoding error
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
 
-    context = {'rates':rates}
+    context = {'rates': rates}
     return render(request, 'account/customer/withdraw_crypto.html', context)

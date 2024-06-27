@@ -22,6 +22,7 @@
         align-items: center;
         justify-content: center;
         color: #fff !important;
+        padding-inline: 20px;
     }
 </style>
 
@@ -69,6 +70,10 @@
                         <p class="spinner_talk fw-bold mt-2 text-center">Completed successfully</p>
                         <a href="{% url 'account:crypto_wallet_view' %}" class="btn w-100">Finish</a>
                     </div>
+                    <div class="insufficient" style="display: none; padding-inline: 10px;">
+                        <p class="insu_error text-center text-danger"></p>
+                        <a href="{% url 'account:withdraw_crypto' %}" class="btn w-100">Try Again</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <h5 class="text-center">
@@ -106,15 +111,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="wallet_ad" class="form-label">Wallet Address</label>
-                            <input type="text" name="wallet_id" class="form-control" id="wallet_ad" placeholder="">
+                            <input type="text" name="wallet_id" class="form-control" id="wallet_ad" required>
                         </div>
                         <div class="mb-3">
                             <label for="amount" class="form-label">Amount in $</label>
-                            <input type="number" name="amount" class="form-control" id="amount" placeholder="1000">
+                            <input type="number" name="amount" class="form-control" id="amount" placeholder="1000" required>
                         </div>
                         <div class="mb-3">
                             <label for="crypto" class="form-label">Amount in crypto - (readonly)</label>
-                            <input type="text" name="crypto" class="form-control" id="crypto" readonly>
+                            <input type="text" name="crypto" class="form-control" id="crypto" readonly required>
                         </div>
                         <div class="modal-footer">
                             <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
@@ -135,6 +140,7 @@
     let initialSpin = document.querySelector('#initial')
     let processSpin = document.querySelector('.processing')
     let completedSpin = document.querySelector('.completed')
+    let insufficient = document.querySelector('.insufficient')
 
     form.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -185,34 +191,50 @@
     var dollarInput = document.getElementById('amount');
     dollarInput.addEventListener('input', handleInputChange);
 
-    function submitDataToDjango(){
+    function submitDataToDjango() {
         var formData = new FormData(form);
 
         fetch("{% url 'account:withdraw_crypto' %}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(Object.fromEntries(formData)) 
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Success:', data);
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Object.fromEntries(formData))
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.insuff) {
+                let insuError = document.querySelector('.insu_error');
+                let errMessage = `Insufficient Balance: Your ${data.select_coin} balance is below the amount you are trying to withdraw, please check your balance and try again.`;
+
+                // show error
+                insuError.textContent = errMessage
+                
+                processSpin.style.display = 'none';
+                insufficient.style.display = 'block';
+
+                form.reset();
+                
+                // Handle insufficient balance error
+                // console.log('Insufficient balance:', data.insuff); 
+            } else {
+                // console.log('Success:', data);
                 processSpin.style.display = 'none';
                 completedSpin.style.display = 'block';
                 form.reset();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Handle error response as needed
-            });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
+
 
     // Function to show spinner and start fetching data
     function startFetching() {
@@ -242,7 +264,7 @@
                 clearInterval(interval);
                 submitDataToDjango(); 
             }
-        }, 20);
+        }, 10);
     }
 
     
