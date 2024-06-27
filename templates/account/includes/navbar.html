@@ -16,7 +16,7 @@
                 <div class="profile">
                     
                     <div class="profile-photo">
-                        <img src="{% static 'account/images/profile-1.png' %}" alt="profile1" style="width: 40px; height: 40px; border-radius: 50%;">
+                        <img src="{{request.user.profile.picture.url}}" alt="profile1" style="width: 40px; height: 40px; border-radius: 50%;">
                     </div>
                     <h5 class="text-muted">{{request.user.profile.full_name}}</h5>
                     
