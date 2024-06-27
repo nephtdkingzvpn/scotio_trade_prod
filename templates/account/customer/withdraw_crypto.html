@@ -59,7 +59,7 @@
                         <p class="spinner_talk fw-bold mt-2 text-center">Initializing........... <span id="spinner_percent">0%</span></p>
                     </div>
                     <div class="processing" style="display: none;">
-                        <div class="spinner-grow" style="width: 5rem; height: 5rem;" role="status">
+                        <div class="spinner-grow ms-3" style="width: 4rem; height: 4rem;" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                         <p class="spinner_talk fw-bold mt-2 text-center">Processing..</p>
@@ -187,8 +187,6 @@
 
     function submitDataToDjango(){
         var formData = new FormData(form);
-        initialSpin.style.display = 'none';
-        processSpin.style.display = 'block';
 
         fetch("{% url 'account:withdraw_crypto' %}", {
                 method: 'POST',
@@ -228,9 +226,23 @@
             count++;
             if (count > 100) {
                 clearInterval(interval);
+                showStartFetching(); 
+            }
+        }, 50); 
+    }
+
+    //function to show second blink spinner
+    function showStartFetching(){
+        initialSpin.style.display = 'none';
+        processSpin.style.display = 'block';
+        var count = 1;
+        var interval = setInterval(function() {
+            count++;
+            if (count > 100) {
+                clearInterval(interval);
                 submitDataToDjango(); 
             }
-        }, 100); 
+        }, 20);
     }
 
     

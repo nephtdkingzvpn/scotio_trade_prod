@@ -348,7 +348,8 @@ def help_center_view(request):
 
 @login_required
 def withdraw_crypto_view(request):
-    rates = fetch_crypto_with_caching() #this functions fecthes the rate
+    rates = fetch_crypto_with_caching() 
+    user_balance = Balance.objects.get(user=request.user)
 
     # Rename the key 'tether' to 'tetherusdt'
     try:
@@ -363,10 +364,24 @@ def withdraw_crypto_view(request):
             crypto_select = data.get('select-coin')
             network_select = data.get('select-network')
             crypto_amount = data.get('crypto')
-            # print(dollar_amount)
-            # print(crypto_amount)
-            # print(crypto_select)
-            # print(network_select)
+            
+            if crypto_select == 'bitcoin':
+                if float(crypto_amount) > user_balance.bitcoin:
+                    return JsonResponse({'insuff': 'insuficientbalance'})
+                user_balance.bitcoin -= float(crypto_amount)
+                user_balance.save()
+
+            elif crypto_select == 'ethereum':
+                if float(crypto_amount) > user_balance.etheriun:
+                    return JsonResponse({'insuff': 'insuficientbalance'})
+                user_balance.etheriun -= float(crypto_amount)
+                user_balance.save()
+
+            elif crypto_select == 'tetherusdt':
+                if Decimal(crypto_amount) > user_balance.ethereum:
+                    return JsonResponse({'insuff': 'insuficientbalance'})
+                user_balance.ethereum -= Decimal(crypto_amount)
+                user_balance.save()
 
             response_data = {
                 'message': 'Data received successfully',
