@@ -78,6 +78,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
+                                            {% if deposits%}
                                             {% for deposit in deposits %}
                                             <tr>
                                                 
@@ -89,6 +90,7 @@
                                                 <td>{{deposit.date_created}}</td>
                                             </tr>
                                             {% endfor %}
+                                            {% endif%}
                                             </tbody>
                                         </table>
                                     </div>
@@ -112,6 +114,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
+                                            {% if withdraws%}
                                             {% for withdraw in withdraws %}
                                             <tr>
                                                 
@@ -123,6 +126,7 @@
                                                 <td>{{withdraw.r_wallet}}</td>
                                             </tr>
                                             {% endfor %}
+                                            {% endif %}
                                             </tbody>
                                         </table>
                                     </div>
@@ -146,6 +150,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
+                                            {% if exchanges%}
                                             {% for exchange in exchanges %}
                                             <tr>
                                                 
@@ -157,6 +162,7 @@
                                                 <td>{{exchange.date_created}}</td>
                                             </tr>
                                             {% endfor %}
+                                            {% endif %}
                                             </tbody>
                                         </table>
                                     </div>
