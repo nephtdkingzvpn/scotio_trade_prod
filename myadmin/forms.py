@@ -24,6 +24,9 @@ class ProfileCreationForm(forms.ModelForm):
         model = Profile
         fields = "__all__"
         exclude = ['date_created', 'user']
+        labels = {
+            'charge_amount': 'Stock Charge Amount',
+        }
 
     def __init__(self, *args, **kwargs):
         super(ProfileCreationForm, self).__init__(*args, **kwargs)

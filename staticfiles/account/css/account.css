@@ -281,14 +281,23 @@ main #middle-section .my__card{
     transition: all 0.3s ease;
 }
 
-main #middle-section .my__card:nth-child(2){
+main #middle-section .my__card.nu_1{
+    background: linear-gradient(#7f8191, #27282f) !important;
+    box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.2);
+}
+main #middle-section .my__card.nu_2{
+    background: linear-gradient(#ff796f, #bd261b) !important;
+    box-shadow: 0 2rem 3rem var(--color-primary-light)
+}
+
+/* main #middle-section .my__card:nth-child(2){
     background: linear-gradient(#7f8191, #27282f);
     box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.2);
 }
 main #middle-section .my__card:nth-child(3){
     background: linear-gradient(#ff796f, #bd261b);
     box-shadow: 0 2rem 3rem var(--color-primary-light)
-}
+} */
 
 main #middle-section .my__card:hover{
     box-shadow: none;

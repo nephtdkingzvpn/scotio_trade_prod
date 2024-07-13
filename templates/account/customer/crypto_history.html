@@ -1,0 +1,172 @@
+{% extends '../base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+
+<style>
+    /* Custom styling for tab buttons */
+    .nav-tabs .nav-link {
+      background-color: #f8f9fa; /* Background color */
+      color: #495057; /* Text color */
+      border: 1px solid #dee2e6; /* Border color */
+      border-radius: 0.25rem 0.25rem 0 0; /* Rounded corners, adjust as needed */
+    }
+
+    /* Active tab button */
+    .nav-tabs .nav-link.active {
+      background-color: #0c0266; /* Active background color */
+      color: #fff; /* Active text color */
+      border-color: #0c0266; /* Active border color */
+    }
+
+    /* Hover effect */
+    .nav-tabs .nav-link:hover {
+      background-color: #e9ecef; /* Hover background color */
+      color: #0c0266; /* Hover text color */
+      border-color: #dee2e6; /* Hover border color */
+    }
+</style>
+
+
+<div class="container-fluid">
+    <div class="dashboard__header">
+        <h4>Welcome: {{request.user.profile.full_name}}</h4>
+        <hr class="mt-0 mt-md-2">
+    </div>
+
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center">Crypto Transaction History</h5>
+                    <hr>
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Deposit</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Withdraw</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Exchange</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mt-4" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed">
+                                            <thead>
+                                            <tr>
+                                                
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Crypto</th>
+                                                <th scope="col">Crypto Amount</th>
+                                                <th scope="col">Amount in USD</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Date</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for deposit in deposits %}
+                                            <tr>
+                                                
+                                                <td>{{deposit.exchange_type}}</td>
+                                                <td>{{deposit.crypto_type}}</td>
+                                                <td>{{deposit.crypto_amt}}</td>
+                                                <td>${{deposit.dollar_amt|intcomma}}</td>
+                                                <td class="fw-bold text-success">{{deposit.status}}</td>
+                                                <td>{{deposit.date_created}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed">
+                                            <thead>
+                                            <tr>
+                                                
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Crypto</th>
+                                                <th scope="col">Crypto Amount</th>
+                                                <th scope="col">Amount in USD</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Recipient Wallet</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for withdraw in withdraws %}
+                                            <tr>
+                                                
+                                                <td>{{withdraw.exchange_type}}</td>
+                                                <td>{{withdraw.crypto_type}}</td>
+                                                <td>{{withdraw.crypto_amt}}</td>
+                                                <td>${{withdraw.dollar_amt|intcomma}}</td>
+                                                <td class="fw-bold text-success">{{withdraw.status}}</td>
+                                                <td>{{withdraw.r_wallet}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed">
+                                            <thead>
+                                            <tr>
+                                                
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Crypto</th>
+                                                <th scope="col">Crypto Amount</th>
+                                                <th scope="col">Amount in USD</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Date</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for exchange in exchanges %}
+                                            <tr>
+                                                
+                                                <td>{{exchange.exchange_type}}</td>
+                                                <td>{{exchange.crypto_type}}</td>
+                                                <td>{{exchange.crypto_amt}}</td>
+                                                <td>${{exchange.dollar_amt|intcomma}}</td>
+                                                <td class="fw-bold text-success">{{exchange.status}}</td>
+                                                <td>{{exchange.date_created}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

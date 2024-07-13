@@ -1,8 +1,9 @@
 import random
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from decimal import Decimal
 
-from .models import BuyStock
+from .models import BuyStock, BuySoldStock
 from . import forms
 from account.models import Profile
 
@@ -34,6 +35,8 @@ def buy_new_stock_view(request):
         user_profile.dollar_balance -= bought.amount
         user_profile.save()
 
+        BuySoldStock.objects.create(user=request.user, stock=bought.stock, sold_for=bought.amount, transaction_type='Bought')
+
         messages.success(request, 'Your Stock purchase was successful')
         return redirect('stock:stock_list')
     return render(request, 'stock/buy_stock.html', {'form':form})
@@ -42,12 +45,36 @@ def buy_new_stock_view(request):
 def sell_stock_view(request):
     if request.method == 'POST':
         stock_id = request.POST['stock_id']
+        s_amount = Decimal(request.POST['s_amount'])
         stock = BuyStock.objects.get(id=stock_id)
         user_profile = Profile.objects.get(user=request.user)
-        stock.is_active = False
-        stock.sold_for = stock.get_live_profit()
+
+        if s_amount > stock.get_live_profit():
+            messages.error(request, 'The amount entered is higher than the available balance for this stock')
+            return redirect('stock:stock_list')
+        
+        sell_balance = stock.get_live_profit() - s_amount
+        
+        stock.amount = (sell_balance/Decimal(stock.percent_live)) 
+        stock.sold_for = s_amount
         stock.save()
-        user_profile.dollar_balance += stock.get_live_profit()
+
+        user_profile.dollar_balance += s_amount
         user_profile.save()
+
+        BuySoldStock.objects.create(user=request.user, stock=stock.stock, sold_for=s_amount, transaction_type='Sold')
+
+        if sell_balance <= 0:
+            stock.is_active = False
+            stock.save()
+
         messages.success(request, 'Stock Sold successfully')
+        return redirect('stock:stock_list')
     return redirect('stock:stock_list')
+
+
+def stock_trade_history_view(request):
+    sold_stocks = BuySoldStock.objects.filter(user=request.user)
+
+    context = {'sold_stocks':sold_stocks}
+    return render(request, 'stock/stock_transaction.html', context)

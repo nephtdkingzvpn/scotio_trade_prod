@@ -10,9 +10,11 @@ class BitcoinTrade(models.Model):
 class ExchangeTrade(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     exchange_type = models.CharField(max_length=100)
+    crypto_type = models.CharField(max_length=100)
     crypto_amt = models.FloatField()
     dollar_amt = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     date_created = models.DateTimeField(auto_now_add=True)
+    r_wallet = models.CharField(max_length=300, null=True, blank=True)
     status = models.CharField(max_length=100)
 
     class Meta:

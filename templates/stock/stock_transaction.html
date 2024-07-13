@@ -1,0 +1,72 @@
+{% extends '../account/base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+<style>
+    .header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .header h3{
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+    .modal-content{
+        max-width: 400px;
+    }
+</style>
+<div class="container-fluid py-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="header">
+                        <h3 class="text-center text-muted">
+                            Stock Trade History
+                        </h3>
+                    </div>
+                    <hr>
+                    
+                    <div class="table-responsive table-condensed">
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Logo</th>
+                                <th scope="col">Company</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Bonds</th>
+                                <th scope="col">Date</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% for stock in sold_stocks %}
+                                <tr>
+                                    <td><img src="{{stock.stock.picture.url}}" style="width: 16px;"></td>
+                                    <td>{{stock.stock.company}}</td>
+                                    <td class="fw-bold">{{stock.transaction_type}}</td>
+                                    <td>${{stock.sold_for|intcomma}}</td>
+                                    <td>{{stock.get_number_of_sold_bonds}} Bonds</td>
+                                    <td>{{stock.date_created}}</td>
+
+                                    
+                                </tr>                                
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+ 
+{% endblock %}
+<!-- <br> -->

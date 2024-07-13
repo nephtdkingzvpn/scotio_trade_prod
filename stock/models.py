@@ -43,3 +43,22 @@ class BuyStock(models.Model):
         else:
             live_profit = self.amount / Decimal(self.percent_live)
         return math.ceil(live_profit)
+
+
+class BuySoldStock(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    # amount = models.DecimalField(max_digits=12, decimal_places=2)
+    sold_for = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    transaction_type = models.CharField(max_length=100)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date_created']
+
+    def __str__(self):
+        return f"{self.stock.company}-{self.amount}"
+
+    def get_number_of_sold_bonds(self):
+        my_bond = self.sold_for / self.stock.price_per_bond
+        return math.ceil(my_bond)

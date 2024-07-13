@@ -4,5 +4,5 @@ from . import views
 app_name = 'crypto'
 
 urlpatterns = [
-    # path('list/stock/', views.stock_list_view, name="stock_list"),
+    path('crypto/history/', views.crypto_history_view, name="crypto_history"),
 ]

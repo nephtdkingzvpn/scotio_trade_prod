@@ -16,6 +16,9 @@
         font-weight: bold;
         text-decoration: underline;
     }
+    .modal-content{
+        max-width: 400px;
+    }
 </style>
 <div class="container-fluid py-3">
     <div class="row">
@@ -26,13 +29,14 @@
                         <h3 class="text-center text-muted">
                             Active Stock Trades
                         </h3>
+                        <a href="{% url 'stock:stock_trade_history' %}">View History</a>
                         <a href="{% url 'stock:buy_new_stock' %}" class="buy_stock btn w-50">Buy New Stock</a>
                     </div>
                     {% include '../account/includes/alert.html' %}
                     <hr>
                     
-                    <div class="table-responsive table-condensed">
-                        <table class="table">
+                    <div class="table-responsive table-condensed w-100">
+                        <table class="table table-responsive">
                             <thead>
                               <tr>
                                 <th scope="col">Logo</th>
@@ -46,26 +50,75 @@
                             </thead>
                             <tbody>
                             {% for stock in active_stocks %}
-                              <tr>
-                                <td><img src="{{stock.stock.picture.url}}" style="width: 16px;"></td>
-                                <td>{{stock.stock.company}}</td>
-                                <td class="text-muted">{{stock.get_number_of_bonds}} Bonds</td>
-                                <td>${{stock.amount|intcomma}}</td>
-                                <td>${{stock.get_live_profit|intcomma}}</td>
-                                <td class="fw-bold text-{% if stock.is_profit and stock.percent_live >= 0.98 %}success{% else%}danger{% endif %}">{{stock.percent_live}}%</td>
-                                <!-- <td><a href="" class="table-btn w-100">Sell</a></td> -->
-                                <td>
-                                    <form action="{% url 'stock:sell_stock' %}" method="POST" id="sell_stock_form">
-                                        <input type="text" name="stock_id" value="{{stock.id}}" hidden>
-                                        {% csrf_token %}
-                                        <button type="submit" class="table-btn w-100" id="sell_stock_btn">
-                                            <span class="sell-btn-text">Sell</span>
-                                            <i class="fa-solid fa-spinner fa-spin d-none" id="sell_stock_spinner"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                              </tr>
-                              {% endfor %}
+                                <tr>
+                                    <td><img src="{{stock.stock.picture.url}}" style="width: 16px;"></td>
+                                    <td>{{stock.stock.company}}</td>
+                                    <td class="text-muted">{{stock.get_number_of_bonds}} Bonds</td>
+                                    <td>${{stock.amount|intcomma}}</td>
+                                    <td>${{stock.get_live_profit|intcomma}}</td>
+                                    <td class="fw-bold text-{% if stock.is_profit and stock.percent_live >= 0.98 %}success{% else%}danger{% endif %}">{{stock.percent_live}}%</td>
+                                    <!-- <td><a href="" class="table-btn w-100">Sell</a></td> -->
+                                    <td>
+                                        <a href="" class="table-btn w-100" data-bs-toggle="modal" data-bs-target="#{{stock.id}}-Modal">Sell</a>
+                                        <!-- <form action="{% url 'stock:sell_stock' %}" method="POST" id="sell_stock_form">
+                                            <input type="text" name="stock_id" value="{{stock.id}}" hidden>
+                                            {% csrf_token %}
+                                            <button type="submit" class="table-btn w-100" id="sell_stock_btn">
+                                                <span class="sell-btn-text">Sell</span>
+                                                <i class="fa-solid fa-spinner fa-spin d-none" id="sell_stock_spinner"></i>
+                                            </button>
+                                        </form> -->
+                                    </td>
+                                </tr>
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="{{stock.id}}-Modal" tabindex="-1" aria-labelledby="{{stock.id}}-ModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="{{stock.id}}-ModalLabel">Sell Stock</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+
+                                        <!-- my form -->
+                                        <form action="{% url 'stock:sell_stock' %}" method="POST" id="sell_stock_form">
+                                            {% csrf_token %}
+
+                                            <div class="modal-body">
+                                            
+                                                <input type="text" name="stock_id" value="{{stock.id}}" hidden>
+                                                <div class="mb-3">
+                                                    <label for="a_amount" class="form-label">Available Stock for Sell</label>
+                                                    <input type="text" class="form-control" id="a_amount" value="{{stock.get_live_profit}}" readonly>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="s_amount" class="form-label">Amount To Sell</label>
+                                                    <input type="text" name="s_amount" class="form-control" id="s_amount">
+                                                </div>
+                                                <hr>
+                                                <p class="text-dark small">Charges: <span>${{request.user.profile.charge_amount}}</span></p>
+                                                <p class="text-dark small">Tax: <span>3.4%</span></p>
+                                                
+                                                
+                                            </div>
+                                            <div class="modal-footer">
+
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" style="background-color: rgb(145, 8, 8);">Cancel</button>
+
+                                                <button type="submit" class="btn btn-primary w-50" id="sell_stock_btn">
+                                                    <span class="sell-btn-text">Sell</span>
+                                                    <i class="fa-solid fa-spinner fa-spin d-none" id="sell_stock_spinner"></i>
+                                                </button>
+
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    </div>
+                                </div>
+
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -75,6 +128,8 @@
     </div>
 
 </div>
+ 
+
 
 <script>
     const form = document.querySelector('#sell_stock_form');

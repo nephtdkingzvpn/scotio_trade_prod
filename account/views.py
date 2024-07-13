@@ -152,6 +152,9 @@ def exchange_view(request):
                     balance.save()
                     user.dollar_balance -= Decimal(amount)
                     user.save()
+
+                    ExchangeTrade.objects.create(user=request.user, exchange_type='Deposit', crypto_type=selected_option, crypto_amt=c_crypto, dollar_amt=Decimal(amount), status="Successful")
+
                     my_message = f"A ${intcomma(amount)} worth of ({selected_option} coin) have been added to your {selected_option} wallet. Please click the crypto wallet link to view your transaction history"
                     messages.success(request, my_message)
                     return redirect('account:exchange_view')
@@ -205,6 +208,8 @@ def exchange_crypto_tousd_view(request):
                     balance.save()
                     user.dollar_balance += Decimal(amount)
                     user.save()
+
+                    ExchangeTrade.objects.create(user=request.user, exchange_type='Sold', crypto_type=selected_option, crypto_amt=c_crypto, dollar_amt=Decimal(amount), status="Successful")
 
                     my_message = f"Your {selected_option} to dollar exchange was successful, ${intcomma(Decimal(amount))} have been added to your dollar balance."
                     messages.success(request, my_message)
@@ -363,10 +368,13 @@ def withdraw_crypto_view(request):
             crypto_select = data.get('select-coin')
             network_select = data.get('select-network')
             crypto_amount = data.get('crypto')
+            wallet_id = data.get('wallet_id')
 
             error_response = withdraw_crypto(request.user, crypto_select, crypto_amount)
             if error_response:
                 return error_response
+            
+            ExchangeTrade.objects.create(user=request.user, exchange_type='Withdraw', crypto_type=crypto_select, crypto_amt=crypto_amount, dollar_amt=Decimal(dollar_amount), status="Successful", r_wallet=wallet_id)
 
             response_data = {
                 'message': 'Data received successfully',
