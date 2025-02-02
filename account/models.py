@@ -25,10 +25,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=200)
-    dollar_balance = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    dollar_balance = models.DecimalField(decimal_places=2, max_digits=12, default=0, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     picture = CloudinaryField('image', null=True, default=None, blank=True)
-    charge_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    charge_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0, null=True, blank=True)
 
     def __str__(self):
         return self.full_name
